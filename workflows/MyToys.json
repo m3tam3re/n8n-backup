@@ -8,6 +8,11 @@
             "node": "In Billbee Format umwandeln",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Baserow",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -144,6 +149,17 @@
           }
         ]
       ]
+    },
+    "Baserow": {
+      "main": [
+        [
+          {
+            "node": "In Billbee Format umwandeln",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-01-17T13:26:26.485Z",
@@ -213,7 +229,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2020,
+        2140,
         480
       ],
       "id": "c81d1331-8653-4693-ada1-6697dc9ee038",
@@ -325,7 +341,7 @@
       "type": "n8n-nodes-base.ftp",
       "typeVersion": 1,
       "position": [
-        2340,
+        2380,
         480
       ],
       "credentials": {
@@ -498,7 +514,7 @@
             },
             {
               "name": "=orderItems[0].product.SKU",
-              "value": "={{$json[\"POS_ANR\"]}}"
+              "value": "={{$json[\"SKU (Text)\"]}}"
             },
             {
               "name": "=orderItems[0].Quantity",
@@ -545,7 +561,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        1720,
+        1900,
         480
       ]
     },
@@ -595,11 +611,42 @@
           "name": "Google Drive account"
         }
       }
+    },
+    {
+      "parameters": {
+        "databaseId": 104,
+        "tableId": 526,
+        "limit": 1,
+        "additionalOptions": {
+          "filters": {
+            "fields": [
+              {
+                "field": 4228,
+                "value": "={{$json[\"POS_ANR\"]}}"
+              }
+            ]
+          }
+        }
+      },
+      "id": "f67fb89b-d751-41b6-85fb-6943571b3a17",
+      "name": "Baserow",
+      "type": "n8n-nodes-base.baserow",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        600
+      ],
+      "credentials": {
+        "baserowApi": {
+          "id": "10",
+          "name": "Baserow account"
+        }
+      }
     }
   ],
   "pinData": {},
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-01-24T06:49:22.307Z"
+  "updatedAt": "2023-02-02T11:32:29.544Z"
 }

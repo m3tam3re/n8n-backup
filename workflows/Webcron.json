@@ -1,0 +1,59 @@
+{
+  "active": true,
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-02-21T04:38:04.209Z",
+  "id": 5,
+  "name": "Webcron",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes"
+            }
+          ]
+        }
+      },
+      "id": "361e5473-3df8-4543-8f80-c1eb9c8a1748",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        340,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://cloud.lanakk.com/nextcloud/cron.php",
+        "options": {}
+      },
+      "id": "72f1dec2-c62b-4112-ba2a-b73dd9db267a",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        520,
+        420
+      ]
+    }
+  ],
+  "pinData": {},
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-02-21T04:38:06.940Z"
+}

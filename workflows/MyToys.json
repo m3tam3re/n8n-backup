@@ -8,11 +8,6 @@
             "node": "In Billbee Format umwandeln",
             "type": "main",
             "index": 0
-          },
-          {
-            "node": "Baserow",
-            "type": "main",
-            "index": 0
           }
         ]
       ]
@@ -150,11 +145,11 @@
         ]
       ]
     },
-    "Baserow": {
+    "Billbee ShopID + Token": {
       "main": [
         [
           {
-            "node": "In Billbee Format umwandeln",
+            "node": "Bestellung an Billbee senden",
             "type": "main",
             "index": 0
           }
@@ -223,7 +218,7 @@
           "fullResponse": false
         },
         "bodyParametersJson": "={{$json}}",
-        "headerParametersJson": "={\n \"Content-Type\":\"application/json\",\n \"X-Billbee-Api-Key\":\"{{$node[\"Billbee ShopID + Token\"].parameter[\"values\"][\"string\"][1][\"value\"]}}\"\n }"
+        "headerParametersJson": "={\n \"Content-Type\":\"application/json\",\n \"X-Billbee-Api-Key\":\"{{$node[\"Billbee ShopID + Token\"].json[\"X-Billbee-Api-Key\"]}}\"\n }"
       },
       "name": "Bestellung an Billbee senden",
       "type": "n8n-nodes-base.httpRequest",
@@ -514,7 +509,7 @@
             },
             {
               "name": "=orderItems[0].product.SKU",
-              "value": "={{$json[\"SKU (Text)\"]}}"
+              "value": "={{$json[\"POS_TEXT\"]}}"
             },
             {
               "name": "=orderItems[0].Quantity",
@@ -611,42 +606,11 @@
           "name": "Google Drive account"
         }
       }
-    },
-    {
-      "parameters": {
-        "databaseId": 104,
-        "tableId": 526,
-        "limit": 1,
-        "additionalOptions": {
-          "filters": {
-            "fields": [
-              {
-                "field": 4228,
-                "value": "={{$json[\"POS_ANR\"]}}"
-              }
-            ]
-          }
-        }
-      },
-      "id": "f67fb89b-d751-41b6-85fb-6943571b3a17",
-      "name": "Baserow",
-      "type": "n8n-nodes-base.baserow",
-      "typeVersion": 1,
-      "position": [
-        1680,
-        600
-      ],
-      "credentials": {
-        "baserowApi": {
-          "id": "10",
-          "name": "Baserow account"
-        }
-      }
     }
   ],
   "pinData": {},
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-02-02T11:32:29.544Z"
+  "updatedAt": "2023-03-13T14:51:25.828Z"
 }

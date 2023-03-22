@@ -1,0 +1,258 @@
+{
+  "active": false,
+  "connections": {
+    "In Billbee Format umwandeln": {
+      "main": [
+        [
+          {
+            "node": "Bestellung an Billbee senden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Bestellungen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bestellungen": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "GraphQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GraphQL": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-03-22T08:02:26.140Z",
+  "id": 6,
+  "name": "Order API",
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "httpMethod": "POST",
+        "path": "dropshipping/wk24",
+        "options": {}
+      },
+      "id": "a1bee864-5a2f-46a0-8f43-0eab021ee0ca",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -380,
+        380
+      ],
+      "webhookId": "081906fa-1559-4a72-8a2a-29eb02450977",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "12",
+          "name": "KEY-WK24"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "https://app.billbee.io/api/v1/orders?shopId=97989",
+        "jsonParameters": true,
+        "options": {
+          "fullResponse": false
+        },
+        "bodyParametersJson": "={{$json}}",
+        "headerParametersJson": "={\n \"Content-Type\":\"application/json\",\n \"X-Billbee-Api-Key\":\"{{$node[\"Billbee ShopID + Token\"].json[\"X-Billbee-Api-Key\"]}}\"\n }"
+      },
+      "name": "Bestellung an Billbee senden",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        480,
+        740
+      ],
+      "id": "88d9eea0-b7e1-459f-9d5c-c9c3465bc5b9",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "Billbee"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "CreatedAt",
+              "value": "={{ $today.toISODate()}}"
+            },
+            {
+              "name": "=OrderNumber",
+              "value": "={{$json[\"OrderId\"]}}"
+            },
+            {
+              "name": "ShippingAddress.Street",
+              "value": "={{$json[\"Street\"]}}"
+            },
+            {
+              "name": "ShippingAddress.HouseNumber",
+              "value": "={{$json[\"HouseNumber\"]}}"
+            },
+            {
+              "name": "ShippingAddress.City",
+              "value": "={{$json[\"City\"]}}"
+            },
+            {
+              "name": "ShippingAddress.Zip",
+              "value": "={{$json[\"Zip\"]}}"
+            },
+            {
+              "name": "ShippingAddress.Country",
+              "value": "={{$json[\"Country\"]}}"
+            },
+            {
+              "name": "ShippingAddress.CountryISO2",
+              "value": "={{$json[\"Country\"]}}"
+            },
+            {
+              "name": "invoiceAddress.NameAddition",
+              "value": "={{$json[\"Name\"]}}"
+            },
+            {
+              "name": "OrderItems",
+              "value": "={{$jmespath($json.OrderItems, \"[].{Product: {SKU: sku}, Quantity: quantity}\")}}"
+            },
+            {
+              "name": "Customer.Name",
+              "value": "Weltkarten24.com"
+            }
+          ],
+          "number": [
+            {
+              "name": "PaymentMethod",
+              "value": 26
+            },
+            {
+              "name": "Customer.Id",
+              "value": 73771747
+            },
+            {
+              "name": "State",
+              "value": 3
+            }
+          ]
+        },
+        "options": {
+          "dotNotation": true
+        }
+      },
+      "id": "c66a85e5-2fe3-432a-b74e-85c0523b94de",
+      "name": "In Billbee Format umwandeln",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        260,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "let orders = [];\n\nfunction splitAddress(addressString) {\n  const result = { Street: null, HouseNumber: null };\n\n  const regex = /^([^\\d]+)\\s*([\\d]+[a-zA-Z]?)/i;\n\n  const match = addressString.match(regex);\n\n  if (match) {\n    result.Street = match[1].trim();\n    result.HouseNumber = match[2].trim();\n  }\n\n  return result;\n}\n\nfunction countryToIsoCode(countryName) {\n  const countryCodes = {\n    \"Austria\": \"AT\",\n    \"Germany\": \"DE\"\n  };\n\n  return countryCodes[countryName] || null;\n}\n\nfor (const rawOrder of $input.first().json.body) {\n  order = splitAddress(rawOrder.street);\n  order.Zip = rawOrder.zip,\n  order.City = rawOrder.city,\n  order.Name = rawOrder.name,\n  order.Phone = rawOrder.phone,\n  order.Country = countryToIsoCode(rawOrder.country),\n  order.OrderId = rawOrder.orderid,\n  order.OrderItems = rawOrder.items,\n  orders.push(order);\n}\nreturn orders;"
+      },
+      "id": "8c097df4-26d8-4ec2-874c-6a251b7bd349",
+      "name": "Bestellungen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "endpoint": "https://lana-kk.myshopify.com/admin/api/2022-01/graphql.json",
+        "query": "={ \n  inventoryItems(first:1, query:\"sku:{{$json[\"sku\"]}}\") {\n    edges{\n      node{\n        sku\n        variant {\n          price\n          compareAtPrice \n        }\n      }\n    }\n  }\n}"
+      },
+      "name": "GraphQL",
+      "type": "n8n-nodes-base.graphql",
+      "typeVersion": 1,
+      "position": [
+        180,
+        180
+      ],
+      "id": "9ed9ff7e-64d2-463b-817e-a704913ac6d7",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "14",
+          "name": "Shopify lanakk.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "let OrderItems = [];\nfor (const item of $input.all()) {\n  for (const OrderItem of item.json.OrderItems) {\n    OrderItems.push(OrderItem);\n  }\n}\nreturn OrderItems;"
+      },
+      "id": "b6c4cd4d-6e50-4435-9bf3-b546ad160b9c",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        0,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "let OrderItems = [];\n\nfor (const item of $input.all()) {\n\n    let compareAtPrice = item.json.data.inventoryItems.edges[0].node.variant.compareAtPrice;\n    let currentPrice = item.json.data.inventoryItems.edges[0].node.variant.price;\n\n    let OrderItem = {\n        \"sku\": item.json.data.inventoryItems.edges[0].node.sku\n    };\n\n    if (currentPrice < compareAtPrice) {\n\n        OrderItem.price = compareAtPrice;\n\n    } else {\n\n        OrderItem.price = currentPrice;\n\n    }\n    OrderItems.push(OrderItem);\n    console.log(OrderItem)\n}\nreturn OrderItems;"
+      },
+      "id": "0456066b-24ec-4e23-8a24-fbf31ea465ce",
+      "name": "Code1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        360,
+        180
+      ]
+    }
+  ],
+  "pinData": {},
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2023-03-22T15:49:05.666Z"
+}

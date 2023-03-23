@@ -30,6 +30,11 @@
             "node": "Code",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -49,7 +54,29 @@
       "main": [
         [
           {
-            "node": "Code1",
+            "node": "Set Price",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Price": {
+      "main": [
+        [
+          {
+            "node": "Item Lists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Item Lists": {
+      "main": [
+        [
+          {
+            "node": "Code2",
             "type": "main",
             "index": 0
           }
@@ -238,14 +265,41 @@
     },
     {
       "parameters": {
-        "jsCode": "let OrderItems = [];\n\nfor (const item of $input.all()) {\n\n    let compareAtPrice = item.json.data.inventoryItems.edges[0].node.variant.compareAtPrice;\n    let currentPrice = item.json.data.inventoryItems.edges[0].node.variant.price;\n\n    let OrderItem = {\n        \"sku\": item.json.data.inventoryItems.edges[0].node.sku\n    };\n\n    if (currentPrice < compareAtPrice) {\n\n        OrderItem.price = compareAtPrice;\n\n    } else {\n\n        OrderItem.price = currentPrice;\n\n    }\n    OrderItems.push(OrderItem);\n    console.log(OrderItem)\n}\nreturn OrderItems;"
+        "jsCode": "// Loop over input items and add a new field\n// called 'myNewField' to the JSON of each one\nlet foo = $('Item Lists').all();\nconsole.log(foo);\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n\nreturn $input.all();"
+      },
+      "id": "0b594c83-c0d3-4b76-8f31-d0820fbadf18",
+      "name": "Code2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        200,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "let OrderItems;\n\nfor (const item of $input.all()) {\n\n    let compareAtPrice = item.json.data.inventoryItems.edges[0].node.variant.compareAtPrice;\n    let currentPrice = item.json.data.inventoryItems.edges[0].node.variant.price;\n\n  let OrderItem = {};\n    \n    let sku = item.json.data.inventoryItems.edges[0].node.sku;\n    if (compareAtPrice) {\n\n        OrderItems.OrderItem[sku] = compareAtPrice;\n\n    } else {\n\n        OrderItems.OrderItem[sku] = currentPrice;\n\n    }\n    console.log(OrderItem)\n}\nreturn OrderItems;"
       },
       "id": "0456066b-24ec-4e23-8a24-fbf31ea465ce",
-      "name": "Code1",
+      "name": "Set Price",
       "type": "n8n-nodes-base.code",
       "typeVersion": 1,
       "position": [
         360,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "aggregateItems",
+        "aggregate": "aggregateAllItemData"
+      },
+      "id": "2248767e-a9db-4cdd-ac2e-a08d6d5bca5a",
+      "name": "Item Lists",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 1,
+      "position": [
+        580,
         180
       ]
     }
@@ -254,5 +308,5 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-22T15:49:05.666Z"
+  "updatedAt": "2023-03-23T05:26:17.199Z"
 }

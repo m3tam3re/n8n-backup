@@ -1,0 +1,187 @@
+{
+  "active": true,
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "An Datev weiterleiten",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "An Datev weiterleiten": {
+      "main": [
+        [
+          {
+            "node": "Datev Label anhängen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-03-27T11:07:01.918Z",
+  "id": 7,
+  "name": "Rechnungen -> DATEV",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "id": "b4421482-9533-4a70-a010-bc37198173de",
+      "name": "Gmail Trigger",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1,
+      "position": [
+        280,
+        -200
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "16",
+          "name": "Gmail - buchhaltung@lanakk.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "messageId": "={{$json[\"id\"]}}",
+        "simple": false,
+        "options": {
+          "dataPropertyAttachmentsPrefixName": "attachment_",
+          "downloadAttachments": true
+        }
+      },
+      "id": "92850b56-b38e-49a1-8fd7-253b022a3fa2",
+      "name": "Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        500,
+        -200
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "16",
+          "name": "Gmail - buchhaltung@lanakk.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$binary.attachment_0.fileExtension}}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "d7bbeaa9-8961-4f71-a21c-11009aad9712",
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        720,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "79e9685d-6952-420b-a9b0-db1950def732@uploadmail.datev.de",
+        "subject": "=Neuer Beleg - {{$now}}",
+        "message": "=",
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {
+                "property": "attachment_0"
+              }
+            ]
+          }
+        }
+      },
+      "id": "92b1ec51-291e-43bb-9f62-96ab3acb1f6c",
+      "name": "An Datev weiterleiten",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        960,
+        -320
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "16",
+          "name": "Gmail - buchhaltung@lanakk.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{$node[\"An Datev weiterleiten\"].json[\"id\"]}}",
+        "labelIds": [
+          "Label_5013070903895930344"
+        ]
+      },
+      "id": "94d4e183-8b86-48ea-9a7d-c620ce431b5e",
+      "name": "Datev Label anhängen",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        1160,
+        -320
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "16",
+          "name": "Gmail - buchhaltung@lanakk.com"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {},
+  "staticData": {
+    "node:Gmail Trigger": {
+      "lastTimeChecked": "1679932761"
+    }
+  },
+  "tags": [],
+  "updatedAt": "2023-03-27T15:59:21.000Z"
+}

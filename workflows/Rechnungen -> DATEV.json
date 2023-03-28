@@ -31,6 +31,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -108,6 +115,11 @@
             {
               "value1": "={{$binary.attachment_0.fileExtension}}",
               "operation": "isNotEmpty"
+            },
+            {
+              "value1": "={{$json[\"labelIds\"][1]}}",
+              "operation": "notEqual",
+              "value2": "SENT"
             }
           ]
         }
@@ -173,15 +185,26 @@
           "name": "Gmail - buchhaltung@lanakk.com"
         }
       }
+    },
+    {
+      "parameters": {},
+      "id": "a38e57c7-1953-45bd-87cc-c4bd9aaf4e57",
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        960,
+        -60
+      ]
     }
   ],
   "pinData": {},
   "settings": {},
   "staticData": {
     "node:Gmail Trigger": {
-      "lastTimeChecked": "1679932761"
+      "lastTimeChecked": "1679973824"
     }
   },
   "tags": [],
-  "updatedAt": "2023-03-27T15:59:21.000Z"
+  "updatedAt": "2023-03-28T03:23:44.000Z"
 }

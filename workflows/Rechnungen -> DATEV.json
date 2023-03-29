@@ -27,7 +27,7 @@
       "main": [
         [
           {
-            "node": "An Datev weiterleiten",
+            "node": "Code",
             "type": "main",
             "index": 0
           }
@@ -46,6 +46,82 @@
         [
           {
             "node": "Datev Label anhängen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Binärdaten zu JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Binärdaten zu JSON": {
+      "main": [
+        [
+          {
+            "node": "Hash erzeugen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hash erzeugen": {
+      "main": [
+        [
+          {
+            "node": "An Datev weiterleiten",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "AWS Textract",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "AWS Textract": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Dateien ablegen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
             "type": "main",
             "index": 0
           }
@@ -113,8 +189,9 @@
         "conditions": {
           "string": [
             {
-              "value1": "={{$binary.attachment_0.fileExtension}}",
-              "operation": "isNotEmpty"
+              "value1": "={{$jmespath($binary, \"*.[fileExtension]\")}}",
+              "operation": "contains",
+              "value2": "pdf"
             },
             {
               "value1": "={{$json[\"labelIds\"][1]}}",
@@ -135,7 +212,7 @@
     },
     {
       "parameters": {
-        "sendTo": "79e9685d-6952-420b-a9b0-db1950def732@uploadmail.datev.de",
+        "sendTo": "sascha@lanakk.com",
         "subject": "=Neuer Beleg - {{$now}}",
         "message": "=",
         "options": {
@@ -153,8 +230,8 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2,
       "position": [
-        960,
-        -320
+        1720,
+        -100
       ],
       "credentials": {
         "gmailOAuth2": {
@@ -176,8 +253,8 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2,
       "position": [
-        1160,
-        -320
+        1920,
+        -100
       ],
       "credentials": {
         "gmailOAuth2": {
@@ -193,8 +270,138 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        960,
-        -60
+        1000,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nitems = [];\n\nfor (const item of $input.all()) {\n     for (let i = 0; i < Object.keys(item.binary).length; i++) {\n        let newItem = {\n          \"json\": {},\n          \"binary\":  {}\n        };\n        newItem.json = item.json;\n        newItem.binary.attachment_0 = item.binary[\"attachment_\" +i];\n        items.push(newItem);\n     }\n}\n\nreturn items;"
+      },
+      "id": "9265ff9e-648b-4c83-90be-ae9cf3d96d9b",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        -300
+      ]
+    },
+    {
+      "parameters": {
+        "setAllData": false,
+        "sourceKey": "=attachment_0",
+        "options": {
+          "keepSource": true
+        }
+      },
+      "id": "d403f312-afc3-4b99-9344-38764a94d3b1",
+      "name": "Binärdaten zu JSON",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        -300
+      ]
+    },
+    {
+      "parameters": {
+        "value": "={{$json.data}}",
+        "dataPropertyName": "hash"
+      },
+      "id": "a743c51c-d13b-4c7b-a6c6-7dfbc60c0904",
+      "name": "Hash erzeugen",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        -300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "bucketName": "rechnungen",
+        "fileName": "={{$json.hash}}.{{$binary.attachment_0.fileExtension}}",
+        "binaryPropertyName": "=attachment_0",
+        "additionalFields": {},
+        "tagsUi": {
+          "tagsValues": [
+            {
+              "key": "MONAT",
+              "value": "={{ $json[\"month\"] }}"
+            },
+            {
+              "key": "JAHR",
+              "value": "={{ $json[\"year\"] }}"
+            },
+            {
+              "key": "RE-NUMMER",
+              "value": "={{ $json[\"INVOICE_RECEIPT_ID\"] }}"
+            }
+          ]
+        }
+      },
+      "id": "6b746f53-17e9-49eb-804b-e5e2a8091589",
+      "name": "Dateien ablegen",
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        2440,
+        -320
+      ],
+      "credentials": {
+        "s3": {
+          "id": "17",
+          "name": "S3 account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "attachment_0"
+      },
+      "id": "46f3136d-a228-4ce5-9725-88882e967a4c",
+      "name": "AWS Textract",
+      "type": "n8n-nodes-base.awsTextract",
+      "typeVersion": 1,
+      "position": [
+        1720,
+        -520
+      ],
+      "credentials": {
+        "aws": {
+          "id": "15",
+          "name": "AWS account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "mergeByPosition",
+        "options": {}
+      },
+      "id": "ed97437a-6dca-42ca-86b3-de5ac52b5892",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2,
+      "position": [
+        2200,
+        -320
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "function getMonthAndYear(dateString) {\n  const dateArray = dateString.split('.');\n  const monthAbbreviations = ['JAN', 'FEB', 'MÄR', 'APR', 'MAI', 'JUN', 'JUL', 'AUG', 'SEP', 'OKT', 'NOV', 'DEZ'];\n  const monthIndex = parseInt(dateArray[1]) - 1;\n  const month = monthAbbreviations[monthIndex];\n  let year = dateArray[2];\n  \n  if (year.length === 2) {\n    year = '20' + year;\n  }\n\n  return { month: month, year: year };\n}\n\nfor (const item of $input.all()) {\n  let period = getMonthAndYear(item.json.INVOICE_RECEIPT_DATE);\n  item.json.month = period.month;\n  item.json.year = period.year;\n}\n\nreturn $input.all();"
+      },
+      "id": "a62d461f-f487-4caf-aa38-8a1f2914c412",
+      "name": "Code1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        -520
       ]
     }
   ],
@@ -202,9 +409,9 @@
   "settings": {},
   "staticData": {
     "node:Gmail Trigger": {
-      "lastTimeChecked": "1680000229"
+      "lastTimeChecked": "1680105197"
     }
   },
   "tags": [],
-  "updatedAt": "2023-03-28T10:43:49.000Z"
+  "updatedAt": "2023-03-29T15:53:17.000Z"
 }

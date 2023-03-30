@@ -130,7 +130,7 @@
     }
   },
   "createdAt": "2023-03-27T11:07:01.918Z",
-  "id": 7,
+  "id": "7",
   "name": "Rechnungen -> DATEV",
   "nodes": [
     {
@@ -409,9 +409,14 @@
   "settings": {},
   "staticData": {
     "node:Gmail Trigger": {
-      "lastTimeChecked": "1680105197"
+      "lastTimeChecked": 1680191095,
+      "possibleDuplicates": [
+        "1873331867115ebd"
+      ]
     }
   },
   "tags": [],
-  "updatedAt": "2023-03-29T15:53:17.000Z"
+  "triggerCount": 1,
+  "updatedAt": "2023-03-30T15:45:27.000Z",
+  "versionId": null
 }

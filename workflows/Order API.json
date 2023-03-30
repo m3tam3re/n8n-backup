@@ -85,7 +85,7 @@
     }
   },
   "createdAt": "2023-03-22T08:02:26.140Z",
-  "id": 6,
+  "id": "6",
   "name": "Order API",
   "nodes": [
     {
@@ -308,5 +308,7 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2023-03-23T05:26:17.199Z"
+  "triggerCount": 0,
+  "updatedAt": "2023-03-23T05:26:17.199Z",
+  "versionId": null
 }

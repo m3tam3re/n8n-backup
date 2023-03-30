@@ -158,7 +158,7 @@
     }
   },
   "createdAt": "2023-01-17T13:26:26.485Z",
-  "id": 1,
+  "id": "1",
   "name": "MyToys",
   "nodes": [
     {
@@ -610,7 +610,13 @@
   ],
   "pinData": {},
   "settings": {},
-  "staticData": null,
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrencyRules": []
+    }
+  },
   "tags": [],
-  "updatedAt": "2023-03-13T14:51:25.828Z"
+  "triggerCount": 2,
+  "updatedAt": "2023-03-30T06:48:30.000Z",
+  "versionId": "ad39e7ce-d0ee-4e96-8aa9-cc5ea0db0f4c"
 }

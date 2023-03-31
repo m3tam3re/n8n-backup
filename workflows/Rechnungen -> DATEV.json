@@ -113,6 +113,11 @@
             "node": "Dateien ablegen",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -126,6 +131,22 @@
             "index": 0
           }
         ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dateien ablegen": {
+      "main": [
+        []
       ]
     }
   },
@@ -142,7 +163,11 @@
             }
           ]
         },
-        "filters": {}
+        "filters": {
+          "labelIds": [
+            "INBOX"
+          ]
+        }
       },
       "id": "b4421482-9533-4a70-a010-bc37198173de",
       "name": "Gmail Trigger",
@@ -230,7 +255,7 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2,
       "position": [
-        1720,
+        1780,
         -100
       ],
       "credentials": {
@@ -253,7 +278,7 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2,
       "position": [
-        1920,
+        1980,
         -100
       ],
       "credentials": {
@@ -276,7 +301,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\nitems = [];\n\nfor (const item of $input.all()) {\n     for (let i = 0; i < Object.keys(item.binary).length; i++) {\n        let newItem = {\n          \"json\": {},\n          \"binary\":  {}\n        };\n        newItem.json = item.json;\n        newItem.binary.attachment_0 = item.binary[\"attachment_\" +i];\n        items.push(newItem);\n     }\n}\n\nreturn items;"
+        "jsCode": "\nitems = [];\n\nfor (const item of $input.all()) {\n     for (let i = 0; i < Object.keys(item.binary).length; i++) {\n        let newItem = {\n          \"json\": {},\n          \"binary\":  {}\n        };\n       if (item.binary[\"attachment_\" +i].fileExtension != \"pdf\"){\n         continue;\n       }\n        newItem.json = item.json;\n        newItem.binary.attachment_0 = item.binary[\"attachment_\" +i];\n        items.push(newItem);\n     }\n}\n\nreturn items;"
       },
       "id": "9265ff9e-648b-4c83-90be-ae9cf3d96d9b",
       "name": "Code",
@@ -336,8 +361,12 @@
               "value": "={{ $json[\"year\"] }}"
             },
             {
-              "key": "RE-NUMMER",
+              "key": "REFERENZ",
               "value": "={{ $json[\"INVOICE_RECEIPT_ID\"] }}"
+            },
+            {
+              "key": "TYP",
+              "value": "={{ $json[\"docType\"] }}"
             }
           ]
         }
@@ -347,7 +376,7 @@
       "type": "n8n-nodes-base.s3",
       "typeVersion": 1,
       "position": [
-        2440,
+        2720,
         -320
       ],
       "credentials": {
@@ -366,7 +395,7 @@
       "type": "n8n-nodes-base.awsTextract",
       "typeVersion": 1,
       "position": [
-        1720,
+        1780,
         -520
       ],
       "credentials": {
@@ -374,7 +403,8 @@
           "id": "15",
           "name": "AWS account"
         }
-      }
+      },
+      "continueOnFail": true
     },
     {
       "parameters": {
@@ -387,36 +417,114 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 2,
       "position": [
-        2200,
+        2300,
         -320
       ]
     },
     {
       "parameters": {
-        "jsCode": "function getMonthAndYear(dateString) {\n  const dateArray = dateString.split('.');\n  const monthAbbreviations = ['JAN', 'FEB', 'MÄR', 'APR', 'MAI', 'JUN', 'JUL', 'AUG', 'SEP', 'OKT', 'NOV', 'DEZ'];\n  const monthIndex = parseInt(dateArray[1]) - 1;\n  const month = monthAbbreviations[monthIndex];\n  let year = dateArray[2];\n  \n  if (year.length === 2) {\n    year = '20' + year;\n  }\n\n  return { month: month, year: year };\n}\n\nfor (const item of $input.all()) {\n  let period = getMonthAndYear(item.json.INVOICE_RECEIPT_DATE);\n  item.json.month = period.month;\n  item.json.year = period.year;\n}\n\nreturn $input.all();"
+        "jsCode": "function getMonthAndYear(dateString) {\n  const dateArray = dateString.split('.');\n  const monthAbbreviations = ['JAN', 'FEB', 'MAR', 'APR', 'MAI', 'JUN', 'JUL', 'AUG', 'SEP', 'OKT', 'NOV', 'DEZ'];\n  const monthIndex = parseInt(dateArray[1]) - 1;\n  const month = monthAbbreviations[monthIndex];\n  let year = dateArray[2];\n  \n  if (year.length === 2) {\n    year = '20' + year;\n  }\n\n  return { month: month, year: year };\n}\n\nfor (const item of $input.all()) {\n  let period = getMonthAndYear(item.json.INVOICE_RECEIPT_DATE);\n  item.json.month = period.month;\n  item.json.year = period.year;\n\n  if (!item.json.INVOICE_RECEIPT_ID) {\n    item.json.INVOICE_RECEIPT_ID = \"UNBEKANNT\";\n    item.json.docType = \"UNBEKANNT\";\n    continue;\n  }\n  item.json.docType = \"RECHNUNG\";\n}\n\nreturn $input.all();"
       },
       "id": "a62d461f-f487-4caf-aa38-8a1f2914c412",
       "name": "Code1",
       "type": "n8n-nodes-base.code",
       "typeVersion": 1,
       "position": [
-        1920,
+        1960,
         -520
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const monthId = {\n  'JAN': 3852,\n  'FEB': 3853,\n  'MAR': 3854,\n  'APR': 3855,\n  'MAI': 3856,\n  'JUN': 3857,\n  'JUL': 3858,\n  'AUG': 3859,\n  'SEP': 3860,\n  'OKT': 3861,\n  'NOV': 3862,\n  'DEZ': 3863\n};\n\nconst yearId = {\n  '2015': 3864,\n  '2016': 3865,\n  '2017': 3866,\n  '2018': 3867,\n  '2019': 3868,\n  '2020': 3869,\n  '2021': 3870,\n  '2022': 3871,\n  '2023': 3872,\n  '2024': 3873\n};\nfor (const item of $input.all()) {\n  item.json.month = monthId[item.json.month];\n  item.json.year = yearId[item.json.year];\n  item.json.SUBTOTAL = item.json.SUBTOTAL.replace(',','.');\n  item.json.TAX = item.json.TAX.replace(',','.');\n  dateParts = item.json.INVOICE_RECEIPT_DATE.split('.');\n  item.json.INVOICE_RECEIPT_DATE = `${dateParts[2]}-${dateParts[1].padStart(2, '0')}-${dateParts[0].padStart(2, '0')}`;\n}\n\nreturn $input.all();"
+      },
+      "id": "17ebb256-c137-4fed-8dbc-4c3163b09dd7",
+      "name": "Code2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        2520,
+        -520
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://db.lanakk.com/api/database/rows/table/840/",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "user_field_names",
+              "value": "true"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "Datum",
+              "value": "={{ $json.INVOICE_RECEIPT_DATE }}"
+            },
+            {
+              "name": "Monat",
+              "value": "={{ $json.month }}"
+            },
+            {
+              "name": "Jahr",
+              "value": "={{ $json.year }}"
+            },
+            {
+              "name": "Belegnummer",
+              "value": "={{ $json.INVOICE_RECEIPT_ID }}"
+            },
+            {
+              "name": "Betrag",
+              "value": "={{ $json.SUBTOTAL }}"
+            },
+            {
+              "name": "MwST",
+              "value": "={{ $json.TAX }}"
+            },
+            {
+              "name": "Dateiname",
+              "value": "={{ $json.hash }}.pdf"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "cd342347-419f-462f-b93f-6eaea901be99",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        2720,
+        -520
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "11",
+          "name": "Baserow Header Auth"
+        }
+      }
     }
   ],
   "pinData": {},
   "settings": {},
   "staticData": {
     "node:Gmail Trigger": {
-      "lastTimeChecked": 1680191095,
+      "lastTimeChecked": 1680267812,
       "possibleDuplicates": [
-        "1873331867115ebd"
+        "18737c43cdf9a687"
       ]
     }
   },
   "tags": [],
   "triggerCount": 1,
-  "updatedAt": "2023-03-30T15:45:27.000Z",
-  "versionId": null
+  "updatedAt": "2023-03-31T14:07:09.000Z",
+  "versionId": "4d7d8371-761c-4d89-aa61-88913ce52035"
 }

@@ -143,11 +143,6 @@
           }
         ]
       ]
-    },
-    "Dateien ablegen": {
-      "main": [
-        []
-      ]
     }
   },
   "createdAt": "2023-03-27T11:07:01.918Z",
@@ -423,7 +418,7 @@
     },
     {
       "parameters": {
-        "jsCode": "function getMonthAndYear(dateString) {\n  const dateArray = dateString.split('.');\n  const monthAbbreviations = ['JAN', 'FEB', 'MAR', 'APR', 'MAI', 'JUN', 'JUL', 'AUG', 'SEP', 'OKT', 'NOV', 'DEZ'];\n  const monthIndex = parseInt(dateArray[1]) - 1;\n  const month = monthAbbreviations[monthIndex];\n  let year = dateArray[2];\n  \n  if (year.length === 2) {\n    year = '20' + year;\n  }\n\n  return { month: month, year: year };\n}\n\nfor (const item of $input.all()) {\n  let period = getMonthAndYear(item.json.INVOICE_RECEIPT_DATE);\n  item.json.month = period.month;\n  item.json.year = period.year;\n\n  if (!item.json.INVOICE_RECEIPT_ID) {\n    item.json.INVOICE_RECEIPT_ID = \"UNBEKANNT\";\n    item.json.docType = \"UNBEKANNT\";\n    continue;\n  }\n  item.json.docType = \"RECHNUNG\";\n}\n\nreturn $input.all();"
+        "jsCode": "function getMonthAndYear(dateString) {\n  const dateArray = dateString.split('.');\n  const monthAbbreviations = ['JAN', 'FEB', 'MAR', 'APR', 'MAI', 'JUN', 'JUL', 'AUG', 'SEP', 'OKT', 'NOV', 'DEZ'];\n  const monthIndex = parseInt(dateArray[1]) - 1;\n  const month = monthAbbreviations[monthIndex];\n  let year = dateArray[2];\n  \n  if (year.length === 2) {\n    year = '20' + year;\n  }\n\n  return { month: month, year: year };\n}\n\nfor (const item of $input.all()) {\n  let period = getMonthAndYear(item.json.INVOICE_RECEIPT_DATE);\n  item.json.month = period.month;\n  item.json.year = period.year;\n\n  if (!item.json.INVOICE_RECEIPT_ID) {\n    item.json.INVOICE_RECEIPT_ID = \"UNBEKANNT\";\n    item.json.docType = \"UNBEKANNT\";\n    continue;\n  }\n\n  if (!item.json.TAX) {\n    item.json.TAX = 0; \n  }\n  \n  item.json.docType = \"RECHNUNG\";\n}\n\nreturn $input.all();"
       },
       "id": "a62d461f-f487-4caf-aa38-8a1f2914c412",
       "name": "Code1",
@@ -517,14 +512,15 @@
   "settings": {},
   "staticData": {
     "node:Gmail Trigger": {
-      "lastTimeChecked": 1680389435,
+      "lastTimeChecked": 1680440774,
       "possibleDuplicates": [
-        "1873f03f0c8c5e2e"
+        "1874213552fa6f12",
+        "1874213541c1f59b"
       ]
     }
   },
   "tags": [],
   "triggerCount": 1,
-  "updatedAt": "2023-04-01T22:50:50.000Z",
-  "versionId": "4d7d8371-761c-4d89-aa61-88913ce52035"
+  "updatedAt": "2023-04-02T13:07:03.000Z",
+  "versionId": "7ca21fdf-be3f-41f6-ba2d-79ff588f2749"
 }

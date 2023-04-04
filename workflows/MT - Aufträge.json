@@ -1,0 +1,556 @@
+{
+  "active": true,
+  "connections": {
+    "Auftragsdaten CSV einlesen": {
+      "main": [
+        [
+          {
+            "node": "In Billbee Format umwandeln",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FTP": {
+      "main": [
+        [
+          {
+            "node": "FTP1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PDF": {
+      "main": [
+        [
+          {
+            "node": "Dokumente hochladen",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Auftragsdaten CSV einlesen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FTP1": {
+      "main": [
+        [
+          {
+            "node": "PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rückmeldung CSV erzeugen": {
+      "main": [
+        [
+          {
+            "node": "FTP2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "In Ausgabeformat umwandeln": {
+      "main": [
+        [
+          {
+            "node": "Rückmeldung CSV erzeugen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook für Billbee": {
+      "main": [
+        [
+          {
+            "node": "In Ausgabeformat umwandeln",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "FTP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "In Billbee Format umwandeln": {
+      "main": [
+        [
+          {
+            "node": "Bestellung an Billbee senden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bestellung an Billbee senden": {
+      "main": [
+        [
+          {
+            "node": "Ins Archiv verschieben",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dokumente hochladen": {
+      "main": [
+        [
+          {
+            "node": "Ins Archiv verschieben1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-01-17T13:26:26.485Z",
+  "id": "1",
+  "name": "MT - Aufträge",
+  "nodes": [
+    {
+      "parameters": {
+        "protocol": "sftp",
+        "operation": "list",
+        "path": "/out"
+      },
+      "id": "77792d6c-723a-4021-a25b-866c87195fea",
+      "name": "FTP",
+      "type": "n8n-nodes-base.ftp",
+      "typeVersion": 1,
+      "position": [
+        660,
+        460
+      ],
+      "credentials": {
+        "sftp": {
+          "id": "1",
+          "name": "SFTP MyToys"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "requestMethod": "POST",
+        "url": "https://app.billbee.io/api/v1/orders?shopId=97989",
+        "jsonParameters": true,
+        "options": {
+          "fullResponse": false
+        },
+        "bodyParametersJson": "={{$json}}",
+        "headerParametersJson": "={\n \"Content-Type\":\"application/json\",\n \"X-Billbee-Api-Key\":\"{{$node[\"Billbee ShopID + Token\"].json[\"X-Billbee-Api-Key\"]}}\"\n }"
+      },
+      "name": "Bestellung an Billbee senden",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2020,
+        480
+      ],
+      "id": "c81d1331-8653-4693-ada1-6697dc9ee038",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "Billbee"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toFile",
+        "fileFormat": "csv",
+        "options": {
+          "fileName": "=DESADV_ORD_{{$now}}.csv",
+          "headerRow": true
+        }
+      },
+      "id": "8ad49263-f0f0-4be8-84e3-7cee543e356b",
+      "name": "Rückmeldung CSV erzeugen",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        900,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "=data",
+        "options": {
+          "headerRow": true
+        }
+      },
+      "id": "5de70737-ab1b-48e7-8fd7-3a722fbc00a9",
+      "name": "Auftragsdaten CSV einlesen",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"name\"]}}",
+              "operation": "endsWith",
+              "value2": "pdf"
+            }
+          ]
+        }
+      },
+      "id": "d54af494-70dc-46ac-ad19-91c90fa53f69",
+      "name": "PDF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "protocol": "sftp",
+        "path": "=/out/{{$json[\"name\"]}}"
+      },
+      "id": "ee40a4c2-d570-4a61-8373-e4e4c46536fd",
+      "name": "FTP1",
+      "type": "n8n-nodes-base.ftp",
+      "typeVersion": 1,
+      "position": [
+        900,
+        460
+      ],
+      "credentials": {
+        "sftp": {
+          "id": "1",
+          "name": "SFTP MyToys"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "protocol": "sftp",
+        "operation": "rename",
+        "oldPath": "={{$node[\"PDF\"].binary.data.directory}}/{{$node[\"PDF\"].binary.data.fileName}}",
+        "newPath": "=/archiv/{{$node[\"PDF\"].binary.data.fileName}}",
+        "options": {}
+      },
+      "id": "8e265faa-72f6-4d78-92f2-d946aa866f2f",
+      "name": "Ins Archiv verschieben",
+      "type": "n8n-nodes-base.ftp",
+      "typeVersion": 1,
+      "position": [
+        2320,
+        480
+      ],
+      "credentials": {
+        "sftp": {
+          "id": "1",
+          "name": "SFTP MyToys"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "protocol": "sftp",
+        "operation": "upload",
+        "path": "=/in/{{$binary.data.fileName}}"
+      },
+      "id": "cd13302a-3bcf-4fdf-88a5-1ef5a40a725f",
+      "name": "FTP2",
+      "type": "n8n-nodes-base.ftp",
+      "typeVersion": 1,
+      "position": [
+        1140,
+        740
+      ],
+      "credentials": {
+        "sftp": {
+          "id": "1",
+          "name": "SFTP MyToys"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "let lines = [];\n\nfor (const item of $input.all()) {\n  let parcel_type;\n  switch(item.json.query.id) {\n    case \"Eurocourier\":\n       parcel_type = \"EC_STD_NATIONAL\";\n    break;\n    case \"GLS\":\n      parcel_type = \"GLS_STD_NATIONAL\";\n    break;\n  default:\n      parcel_type = \"DPD_STD_NATIONAL\";\n}\n  let line = {\n    \"TB_ORDER_ID\": item.json.query.id,\n    \"ORDER_PAID\" : 0,\n    \"TYPE\" : item.json.query.type,\n    \"PARCEL_TYPE\": parcel_type,\n    \"SHIP_CODE\" : item.json.query.shipment,\n    \"COMMENT_INTERN\" : \"\",\n    \"COMMENT\" : \"\",\n  }; \n  lines.push(line);\n}\n\nreturn lines;"
+      },
+      "id": "3f76d0dd-3525-4cdb-baab-e2205621ec39",
+      "name": "In Ausgabeformat umwandeln",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        660,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "path": "1730d70c-f532-4b6f-a20e-e2fc7edb2d45",
+        "options": {}
+      },
+      "id": "5a16780d-19a1-4967-8710-9225ddc59ddf",
+      "name": "Webhook für Billbee",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        420,
+        740
+      ],
+      "webhookId": "1730d70c-f532-4b6f-a20e-e2fc7edb2d45"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "id": "47aa99b1-e403-47c1-a8d9-f6d10c2ec553",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        420,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "CreatedAt",
+              "value": "={{ $today.toISODate()}}"
+            },
+            {
+              "name": "Ordernumber",
+              "value": "={{ $json[\"TB_ORDER_ID\"] }}"
+            },
+            {
+              "name": "invoiceAddress.Company",
+              "value": "={{ $json[\"CUST_SHIP_EXTENSION\"] }}"
+            },
+            {
+              "name": "invoiceAddress.Company",
+              "value": "={{ $json[\"CUST_SHIP_SURNAME\"] }}"
+            },
+            {
+              "name": "invoiceAddress.Street",
+              "value": "={{ $json[\"CUST_SHIP_STREET_NO\"] }}"
+            },
+            {
+              "name": "invoiceAddress.City",
+              "value": "={{ $json[\"CUST_SHIP_CITY\"] }}"
+            },
+            {
+              "name": "invoiceAddress.Zip",
+              "value": "={{$json[\"CUST_SHIP_ZIP\"]}}"
+            },
+            {
+              "name": "invoiceAddress.Country",
+              "value": "={{ $json[\"CUST_SHIP_COUNTRY_CODE\"] }}"
+            },
+            {
+              "name": "invoiceAddress.CountryISO2",
+              "value": "={{$json[\"CUST_SHIP_COUNTRY_CODE\"]}}"
+            },
+            {
+              "name": "invoiceAddress.FirstName",
+              "value": "={{$json[\"CUST_SHIP_FIRSTNAME\"]}}"
+            },
+            {
+              "name": "invoiceAddress.LastName",
+              "value": "={{$json[\"CUST_SHIP_FIRSTNAME\"]}}"
+            },
+            {
+              "name": "invoiceAddress.Email",
+              "value": "={{$json[\"CUST_SHIP_EMAIL\"]}}"
+            },
+            {
+              "name": "shippingAddress.Company",
+              "value": "={{ $json[\"CUST_SHIP_EXTENSION\"] }}"
+            },
+            {
+              "name": "shippingAddress.Company",
+              "value": "={{ $json[\"CUST_SHIP_SURNAME\"] }}"
+            },
+            {
+              "name": "shippingAddress.Street",
+              "value": "={{ $json[\"CUST_SHIP_STREET_NO\"] }}"
+            },
+            {
+              "name": "shippingAddress.City",
+              "value": "={{ $json[\"CUST_SHIP_CITY\"] }}"
+            },
+            {
+              "name": "shippingAddress.Zip",
+              "value": "={{$json[\"CUST_SHIP_ZIP\"]}}"
+            },
+            {
+              "name": "shippingAddress.Country",
+              "value": "={{ $json[\"CUST_SHIP_COUNTRY_CODE\"] }}"
+            },
+            {
+              "name": "shippingAddress.CountryISO2",
+              "value": "={{$json[\"CUST_SHIP_COUNTRY_CODE\"]}}"
+            },
+            {
+              "name": "shippingAddress.FirstName",
+              "value": "={{$json[\"CUST_SHIP_FIRSTNAME\"]}}"
+            },
+            {
+              "name": "shippingAddress.LastName",
+              "value": "={{$json[\"CUST_SHIP_FIRSTNAME\"]}}"
+            },
+            {
+              "name": "shippingAddress.Email",
+              "value": "={{$json[\"CUST_SHIP_EMAIL\"]}}"
+            },
+            {
+              "name": "=orderItems[0].product.SKU",
+              "value": "={{$json[\"POS_TEXT\"]}}"
+            },
+            {
+              "name": "=orderItems[0].Quantity",
+              "value": "={{$json[\"POS_QUANTITY\"]}}"
+            },
+            {
+              "name": "=orderItems[0].TotalPrice",
+              "value": "={{$json[\"POS_SALESPRICE\"]}}"
+            },
+            {
+              "name": "Customer.Name",
+              "value": "MyToys Group"
+            },
+            {
+              "name": "Customer.Email",
+              "value": "dev@lanakk.com"
+            }
+          ],
+          "number": [
+            {
+              "name": "PaymentMethod",
+              "value": 26
+            },
+            {
+              "name": "Customer.Id",
+              "value": 163662708
+            },
+            {
+              "name": "Customer.Number",
+              "value": 20089
+            },
+            {
+              "name": "State",
+              "value": 3
+            }
+          ]
+        },
+        "options": {
+          "dotNotation": true
+        }
+      },
+      "id": "50b02a14-bac8-4748-be52-d2e789633254",
+      "name": "In Billbee Format umwandeln",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1720,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "protocol": "sftp",
+        "operation": "rename",
+        "oldPath": "=/out/{{$json[\"name\"]}}",
+        "newPath": "=/archiv/{{$json[\"name\"]}}",
+        "options": {}
+      },
+      "id": "e3fe469c-7ee9-4435-8cff-7ad964fe3b02",
+      "name": "Ins Archiv verschieben1",
+      "type": "n8n-nodes-base.ftp",
+      "typeVersion": 1,
+      "position": [
+        1720,
+        220
+      ],
+      "credentials": {
+        "sftp": {
+          "id": "1",
+          "name": "SFTP MyToys"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "binaryData": true,
+        "name": "={{$binary.data.fileName}}",
+        "parents": [
+          "0AFGOvDYEtp0yUk9PVA"
+        ],
+        "options": {}
+      },
+      "id": "101e2897-0ec5-4401-90d4-1ee5e4b96e14",
+      "name": "Dokumente hochladen",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 2,
+      "position": [
+        1440,
+        220
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "9",
+          "name": "Google Drive account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {},
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrencyRules": []
+    }
+  },
+  "tags": [],
+  "triggerCount": 2,
+  "updatedAt": "2023-04-04T11:19:10.000Z",
+  "versionId": "e2babaa6-b296-4372-affa-b78127e2a2a0"
+}

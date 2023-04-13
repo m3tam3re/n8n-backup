@@ -100,7 +100,12 @@
       "main": [
         [
           {
-            "node": "Bestellung an Billbee senden",
+            "node": "Api-Key",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
             "type": "main",
             "index": 0
           }
@@ -123,6 +128,28 @@
         [
           {
             "node": "Ins Archiv verschieben1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Api-Key": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Bestellung an Billbee senden",
             "type": "main",
             "index": 0
           }
@@ -165,14 +192,14 @@
           "fullResponse": false
         },
         "bodyParametersJson": "={{$json}}",
-        "headerParametersJson": "={\n \"Content-Type\":\"application/json\",\n \"X-Billbee-Api-Key\":\"{{$node[\"Billbee ShopID + Token\"].json[\"X-Billbee-Api-Key\"]}}\"\n }"
+        "headerParametersJson": "={\n \"Content-Type\":\"application/json\",\n \"X-Billbee-Api-Key\":\"{{$node[\"Api-Key\"].json[\"stdout\"]}}\"\n }"
       },
       "name": "Bestellung an Billbee senden",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2020,
-        480
+        2400,
+        500
       ],
       "id": "c81d1331-8653-4693-ada1-6697dc9ee038",
       "credentials": {
@@ -270,8 +297,8 @@
       "type": "n8n-nodes-base.ftp",
       "typeVersion": 1,
       "position": [
-        2320,
-        480
+        2600,
+        500
       ],
       "credentials": {
         "sftp": {
@@ -520,7 +547,7 @@
     {
       "parameters": {
         "binaryData": true,
-        "name": "={{$binary.data.fileName}}",
+        "name": "={{ $json[\"name\"] }}",
         "parents": [
           "0AFGOvDYEtp0yUk9PVA"
         ],
@@ -540,6 +567,30 @@
           "name": "Google Drive account"
         }
       }
+    },
+    {
+      "parameters": {
+        "command": "echo \"$BILBEE_API_KEY\""
+      },
+      "id": "105c3214-b5e7-43b3-b3f1-95a4de48bdd6",
+      "name": "Api-Key",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1960,
+        640
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "612b2d47-ff4e-495f-9857-6df986e8b45b",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2,
+      "position": [
+        2160,
+        500
+      ]
     }
   ],
   "pinData": {},
@@ -551,6 +602,6 @@
   },
   "tags": [],
   "triggerCount": 2,
-  "updatedAt": "2023-04-04T11:19:10.000Z",
-  "versionId": "e2babaa6-b296-4372-affa-b78127e2a2a0"
+  "updatedAt": "2023-04-13T13:51:34.000Z",
+  "versionId": "ebc06ca9-45d1-4304-b2d7-cb585ed814a5"
 }

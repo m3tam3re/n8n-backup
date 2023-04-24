@@ -1,0 +1,151 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Baserow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-04-24T11:21:40.536Z",
+  "id": "9",
+  "name": "Order Sum",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "bda63e5d-18ca-4854-9eea-e08e2a80eec3",
+        "options": {}
+      },
+      "id": "74a70506-66a2-4c93-bd1f-099880a1e5c8",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        1020,
+        560
+      ],
+      "webhookId": "bda63e5d-18ca-4854-9eea-e08e2a80eec3"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field\n// called 'myNewField' to the JSON of each one\nlet items = $input.all();\nlet rows = [];\nconsole.log(items);\nfor (let item of items) {\n  for (let row of item.json.body.items) {\n    let sum = 0;\n    for (let price of row.Einzelpreise) {\n      console.log(price);\n      sum += parseFloat(price.value);\n    }\n    row.Summe = sum;\n    rows.push(row);\n  }\n}\nreturn rows;"
+      },
+      "id": "bde7ecbc-ee3f-4c5a-8306-ed9ee52ca90f",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "databaseId": 160,
+        "tableId": 844,
+        "rowId": "={{ $json[\"id\"] }}",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": 7808,
+              "fieldValue": "={{ $json[\"Summe\"] }}"
+            },
+            {
+              "fieldId": 7708,
+              "fieldValue": "false"
+            }
+          ]
+        }
+      },
+      "id": "474b8fe9-134c-42bd-b45c-890e653f24da",
+      "name": "Baserow",
+      "type": "n8n-nodes-base.baserow",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        540
+      ],
+      "credentials": {
+        "baserowApi": {
+          "id": "10",
+          "name": "Baserow account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json[\"body\"][\"items\"][0][\"Neuberechnen\"] }}",
+              "operation": "notEqual"
+            }
+          ]
+        }
+      },
+      "id": "649bdad4-ba71-4858-855f-356ab2c88077",
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        560
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "5858acda-f722-43c7-953c-f062823f5b7f",
+      "name": "No Operation, do nothing",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        760
+      ]
+    }
+  ],
+  "pinData": {},
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2023-04-24T13:31:37.000Z",
+  "versionId": "b01efef1-92d0-4a19-8572-77ba6f4ce2b0"
+}

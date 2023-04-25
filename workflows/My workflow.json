@@ -1,24 +1,53 @@
 {
   "active": false,
-  "connections": {},
-  "createdAt": "2023-03-31T10:05:27.626Z",
-  "id": "8",
+  "connections": {
+    "When clicking \"Execute Workflow\"": {
+      "main": [
+        [
+          {
+            "node": "Google Ads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-04-25T14:20:01.248Z",
+  "id": "10",
   "name": "My workflow",
   "nodes": [
     {
-      "parameters": {
-        "path": "a2213ec1-01fa-4ce3-aef3-97ee640d7b45",
-        "options": {}
-      },
-      "id": "a01b3619-7c3e-4ce2-a896-033461583f28",
-      "name": "Webhook",
-      "type": "n8n-nodes-base.webhook",
+      "parameters": {},
+      "id": "0fd74cd9-739b-4624-b0a4-7eb6c3003953",
+      "name": "When clicking \"Execute Workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        840,
-        380
+        1140,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "managerCustomerId": "661-871-3180",
+        "clientCustomerId": "209-455-0926",
+        "additionalOptions": {}
+      },
+      "id": "519d526a-434d-45b9-a3e2-0b8e3a4fa056",
+      "name": "Google Ads",
+      "type": "n8n-nodes-base.googleAds",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        560
       ],
-      "webhookId": "a2213ec1-01fa-4ce3-aef3-97ee640d7b45"
+      "credentials": {
+        "googleAdsOAuth2Api": {
+          "id": "21",
+          "name": "Google Ads account"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -26,6 +55,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2023-03-31T10:05:27.626Z",
-  "versionId": "5c01d171-3dc9-4515-b795-e19236ba1d17"
+  "updatedAt": "2023-04-25T14:31:50.000Z",
+  "versionId": "c8a71b36-3923-4453-b04b-507a10faafcb"
 }

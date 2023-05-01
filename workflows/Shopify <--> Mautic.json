@@ -1,0 +1,268 @@
+{
+  "active": false,
+  "connections": {
+    "Email suchen": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Segment hinzufügen",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Aus Segment entfernen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Email suchen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Kontaktsegmente einlesen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Kontaktsegmente einlesen": {
+      "main": [
+        [
+          {
+            "node": "GraphQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-04-30T12:45:41.935Z",
+  "id": "11",
+  "name": "Shopify <--> Mautic",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "c40eca92-295d-4172-b699-55fc1913603f",
+        "options": {}
+      },
+      "id": "fa144037-c609-4e1f-871c-b75bed8cdf9a",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        40,
+        260
+      ],
+      "webhookId": "c40eca92-295d-4172-b699-55fc1913603f"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "getAll",
+        "limit": 1,
+        "options": {
+          "search": "dev@lanakk.com"
+        }
+      },
+      "id": "34c7436f-21b8-400a-b754-baacf1f38ec9",
+      "name": "Email suchen",
+      "type": "n8n-nodes-base.mautic",
+      "typeVersion": 1,
+      "position": [
+        240,
+        260
+      ],
+      "credentials": {
+        "mauticOAuth2Api": {
+          "id": "20",
+          "name": "Mautic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "contactSegment",
+        "operation": "remove",
+        "contactId": "={{ $json.id }}",
+        "segmentId": 1
+      },
+      "id": "0b888d2a-3790-4182-bf62-73d99a1614a6",
+      "name": "Aus Segment entfernen",
+      "type": "n8n-nodes-base.mautic",
+      "typeVersion": 1,
+      "position": [
+        680,
+        380
+      ],
+      "credentials": {
+        "mauticOAuth2Api": {
+          "id": "20",
+          "name": "Mautic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $node.Webhook.json.body.accepts_marketing }}",
+              "value2": "={{ true }}"
+            }
+          ]
+        }
+      },
+      "id": "47173c1e-7a30-41c3-902d-3c271608c5e5",
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        440,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "contactSegment",
+        "contactId": "={{ $json.id }}",
+        "segmentId": 1
+      },
+      "id": "4db83f86-9ec7-41fa-8faf-7886eb539195",
+      "name": "Segment hinzufügen",
+      "type": "n8n-nodes-base.mautic",
+      "typeVersion": 1,
+      "position": [
+        680,
+        140
+      ],
+      "credentials": {
+        "mauticOAuth2Api": {
+          "id": "20",
+          "name": "Mautic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "c83eb6ce-40dd-418c-952a-ed62a051a00b",
+        "options": {}
+      },
+      "id": "4a01eed5-9378-47f3-98ab-e00848ba0093",
+      "name": "Webhook1",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        40,
+        840
+      ],
+      "webhookId": "c83eb6ce-40dd-418c-952a-ed62a051a00b"
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "endpoint": "https://lana-kk.myshopify.com/admin/api/2022-01/graphql.json",
+        "requestFormat": "json",
+        "query": "={\n  customers(first: 1, query: \"email:'dev@lanakk.com'\" ) {\n    edges {\n      node {\n        legacyResourceId\n        email\n        marketingOptInLevel\n      }\n    }\n  }\n}"
+      },
+      "id": "1bc94c14-ceda-42e1-94dc-1ac91ac72f8b",
+      "name": "GraphQL",
+      "type": "n8n-nodes-base.graphql",
+      "typeVersion": 1,
+      "position": [
+        700,
+        840
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "14",
+          "name": "Shopify lanakk.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $node.Webhook.json.body.accepts_marketing }}",
+              "value2": "={{ true }}"
+            }
+          ]
+        }
+      },
+      "id": "162ccd38-f38c-4a76-8e56-1ab52b89601e",
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        900,
+        840
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://ma.lanakk.com/api/contacts/18255/segments",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mauticOAuth2Api",
+        "options": {}
+      },
+      "id": "fdeca80d-3e71-43f0-b02e-11736038519a",
+      "name": "Kontaktsegmente einlesen",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        260,
+        840
+      ],
+      "credentials": {
+        "mauticOAuth2Api": {
+          "id": "20",
+          "name": "Mautic account"
+        },
+        "mauticApi": {
+          "id": "23",
+          "name": "Mautic account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2023-05-01T11:00:13.000Z",
+  "versionId": "2480108f-5453-4dbb-98a2-f652025989db"
+}

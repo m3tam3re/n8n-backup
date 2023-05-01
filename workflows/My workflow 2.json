@@ -51,6 +51,17 @@
           }
         ]
       ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "GraphQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-04-30T12:45:41.935Z",
@@ -180,8 +191,22 @@
     },
     {
       "parameters": {
+        "url": "https://lana-kk.myshopify.com/admin/customers/search.json",
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "shopifyApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "email:dev@lanakk.com"
+            },
+            {
+              "name": "fields",
+              "value": "email,id"
+            }
+          ]
+        },
         "options": {}
       },
       "id": "dd2b8b8e-1929-49d0-88bc-3e2cc9aff981",
@@ -191,7 +216,33 @@
       "position": [
         260,
         840
-      ]
+      ],
+      "credentials": {
+        "shopifyApi": {
+          "id": "13",
+          "name": "lanakk.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "GET"
+      },
+      "id": "1bc94c14-ceda-42e1-94dc-1ac91ac72f8b",
+      "name": "GraphQL",
+      "type": "n8n-nodes-base.graphql",
+      "typeVersion": 1,
+      "position": [
+        480,
+        840
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "14",
+          "name": "Shopify lanakk.com"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -199,6 +250,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2023-04-30T13:28:06.000Z",
-  "versionId": "f68ba8f5-a150-4e27-bedb-07ab522cfbb7"
+  "updatedAt": "2023-05-01T03:58:08.000Z",
+  "versionId": "84d292a2-6dea-4b1e-b454-e4fe5dbf816d"
 }

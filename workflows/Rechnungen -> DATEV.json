@@ -512,14 +512,14 @@
   "settings": {},
   "staticData": {
     "node:Gmail Trigger": {
-      "lastTimeChecked": 1683046130,
+      "lastTimeChecked": 1683123106,
       "possibleDuplicates": [
-        "187dd5de7ea09843"
+        "187e1f4897606dbb"
       ]
     }
   },
   "tags": [],
   "triggerCount": 1,
-  "updatedAt": "2023-05-02T16:49:40.000Z",
+  "updatedAt": "2023-05-03T14:12:41.000Z",
   "versionId": "25daa2a4-b5e0-4360-b8bb-1ded9c07453f"
 }

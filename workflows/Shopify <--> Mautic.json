@@ -5,7 +5,7 @@
       "main": [
         [
           {
-            "node": "Email vorhanden?",
+            "node": "Kontakt gefunden?",
             "type": "main",
             "index": 0
           }
@@ -91,6 +91,53 @@
           }
         ]
       ]
+    },
+    "Mautic": {
+      "main": [
+        [
+          {
+            "node": "Email vorhanden?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Kontakt gefunden?": {
+      "main": [
+        [
+          {
+            "node": "Email vorhanden?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Marketing Einwilligung?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marketing Einwilligung?": {
+      "main": [
+        [
+          {
+            "node": "Mautic",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-04-30T12:45:41.935Z",
@@ -109,7 +156,7 @@
       "typeVersion": 1,
       "position": [
         40,
-        260
+        0
       ],
       "webhookId": "c40eca92-295d-4172-b699-55fc1913603f"
     },
@@ -119,7 +166,7 @@
         "operation": "getAll",
         "limit": 1,
         "options": {
-          "search": "dev@lanakk.com"
+          "search": "in@lanakk.com"
         }
       },
       "id": "34c7436f-21b8-400a-b754-baacf1f38ec9",
@@ -128,8 +175,9 @@
       "typeVersion": 1,
       "position": [
         240,
-        260
+        0
       ],
+      "alwaysOutputData": true,
       "credentials": {
         "mauticOAuth2Api": {
           "id": "20",
@@ -150,8 +198,8 @@
       "type": "n8n-nodes-base.mautic",
       "typeVersion": 1,
       "position": [
-        680,
-        380
+        1380,
+        100
       ],
       "credentials": {
         "mauticOAuth2Api": {
@@ -172,8 +220,8 @@
       "type": "n8n-nodes-base.mautic",
       "typeVersion": 1,
       "position": [
-        680,
-        140
+        1380,
+        -140
       ],
       "credentials": {
         "mauticOAuth2Api": {
@@ -283,8 +331,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        440,
-        260
+        1140,
+        -20
       ]
     },
     {
@@ -332,6 +380,83 @@
           "name": "Shopify lanakk.com"
         }
       }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "email": "bob@lanakk.com",
+        "firstName": "={{ $node[\"Webhook\"].json[\"body\"][\"first_name\"] }}",
+        "lastName": "={{ $node[\"Webhook\"].json[\"body\"][\"last_name\"] }}",
+        "company": "[empty]",
+        "additionalFields": {},
+        "options": {}
+      },
+      "id": "72dff69d-d130-4533-979f-341c220925d1",
+      "name": "Mautic",
+      "type": "n8n-nodes-base.mautic",
+      "typeVersion": 1,
+      "position": [
+        940,
+        140
+      ],
+      "credentials": {
+        "mauticOAuth2Api": {
+          "id": "20",
+          "name": "Mautic account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "9e72fd94-5416-4186-9738-0b1a19330f2c",
+      "name": "No Operation, do nothing",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        940,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.id }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "d81ac980-1063-462f-9812-44239e6fc49d",
+      "name": "Kontakt gefunden?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        460,
+        0
+      ],
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $node.Webhook.json.body.accepts_marketing }}",
+              "value2": "={{ true }}"
+            }
+          ]
+        }
+      },
+      "id": "580be6e1-8658-4741-b52a-43d22faa7e23",
+      "name": "Marketing Einwilligung?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        660,
+        160
+      ]
     }
   ],
   "pinData": {},
@@ -339,6 +464,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2023-05-02T03:58:48.000Z",
-  "versionId": "6644c27e-48ab-4ee2-b82f-6348f9bfd153"
+  "updatedAt": "2023-05-03T04:19:05.000Z",
+  "versionId": "da3d506a-a542-4d72-8b84-f5b64c90de1e"
 }

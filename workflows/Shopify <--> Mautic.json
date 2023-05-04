@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "Email suchen": {
       "main": [
@@ -166,7 +166,7 @@
         "operation": "getAll",
         "limit": 1,
         "options": {
-          "search": "in@lanakk.com"
+          "search": "={{ $json.body.email }}"
         }
       },
       "id": "34c7436f-21b8-400a-b754-baacf1f38ec9",
@@ -251,7 +251,7 @@
         "authentication": "headerAuth",
         "endpoint": "https://lana-kk.myshopify.com/admin/api/2022-01/graphql.json",
         "requestFormat": "json",
-        "query": "={\n  customers(first: 1, query: \"email:'dev@lanakk.com'\" ) {\n    edges {\n      node {\n        id\n        email\n        marketingOptInLevel\n      }\n    }\n  }\n}"
+        "query": "={\n  customers(first: 1, query: \"email:'{{ $node[\"Webhook1\"].json[\"body\"][\"mautic.lead_post_save_update\"][0][\"contact\"][\"fields\"][\"core\"][\"email\"][\"value\"] }}'\" ) {\n    edges {\n      node {\n        id\n        email\n        marketingOptInLevel\n      }\n    }\n  }\n}"
       },
       "id": "1bc94c14-ceda-42e1-94dc-1ac91ac72f8b",
       "name": "GraphQL",
@@ -291,7 +291,7 @@
     },
     {
       "parameters": {
-        "url": "https://ma.lanakk.com/api/contacts/37380/segments",
+        "url": "=https://ma.lanakk.com/api/contacts/{{ $json[\"body\"][\"mautic.lead_post_save_update\"][0][\"contact\"][\"id\"] }}/segments",
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "mauticOAuth2Api",
         "options": {}
@@ -384,10 +384,10 @@
     {
       "parameters": {
         "authentication": "oAuth2",
-        "email": "bob@lanakk.com",
+        "email": "={{ $node[\"Webhook\"].json[\"body\"][\"email\"] }}",
         "firstName": "={{ $node[\"Webhook\"].json[\"body\"][\"first_name\"] }}",
         "lastName": "={{ $node[\"Webhook\"].json[\"body\"][\"last_name\"] }}",
-        "company": "[empty]",
+        "company": "=",
         "additionalFields": {},
         "options": {}
       },
@@ -463,7 +463,7 @@
   "settings": {},
   "staticData": null,
   "tags": [],
-  "triggerCount": 0,
-  "updatedAt": "2023-05-03T04:19:05.000Z",
-  "versionId": "da3d506a-a542-4d72-8b84-f5b64c90de1e"
+  "triggerCount": 2,
+  "updatedAt": "2023-05-04T03:57:31.000Z",
+  "versionId": "ee2d6ecc-b4dd-4ed9-9719-cfed60353ae5"
 }

@@ -150,7 +150,7 @@
         "operation": "getAll",
         "limit": 1,
         "options": {
-          "search": "={{ $json.body.email }}"
+          "search": "={{ $json.email }}"
         }
       },
       "id": "34c7436f-21b8-400a-b754-baacf1f38ec9",
@@ -467,11 +467,11 @@
   "settings": {},
   "staticData": {
     "node:Shopify Trigger": {
-      "webhookId": 1264497295625
+      "webhookId": 1264671260937
     }
   },
   "tags": [],
   "triggerCount": 2,
-  "updatedAt": "2023-05-06T13:28:13.000Z",
-  "versionId": "b643a59d-de3c-40b1-a508-40a20f595a4d"
+  "updatedAt": "2023-05-08T03:29:30.000Z",
+  "versionId": "c7e602bc-6a91-44f7-a82f-8afb75afde12"
 }

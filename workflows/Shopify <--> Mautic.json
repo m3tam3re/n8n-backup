@@ -16,18 +16,7 @@
       "main": [
         [
           {
-            "node": "Kontaktsegmente einlesen",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Kontaktsegmente einlesen": {
-      "main": [
-        [
-          {
-            "node": "GraphQL",
+            "node": "Move Binary Data",
             "type": "main",
             "index": 0
           }
@@ -138,6 +127,46 @@
           }
         ]
       ]
+    },
+    "Crypto": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "GraphQL",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move Binary Data": {
+      "main": [
+        [
+          {
+            "node": "Crypto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2023-04-30T12:45:41.935Z",
@@ -218,7 +247,9 @@
       "parameters": {
         "httpMethod": "POST",
         "path": "c83eb6ce-40dd-418c-952a-ed62a051a00b",
-        "options": {}
+        "options": {
+          "rawBody": true
+        }
       },
       "id": "4a01eed5-9378-47f3-98ab-e00848ba0093",
       "name": "Webhook1",
@@ -235,15 +266,15 @@
         "authentication": "headerAuth",
         "endpoint": "https://lana-kk.myshopify.com/admin/api/2022-01/graphql.json",
         "requestFormat": "json",
-        "query": "={\n  customers(first: 1, query: \"email:'{{ $node[\"Webhook1\"].json[\"body\"][\"mautic.lead_post_save_update\"][0][\"contact\"][\"fields\"][\"core\"][\"email\"][\"value\"] }}'\" ) {\n    edges {\n      node {\n        id\n        email\n        marketingOptInLevel\n      }\n    }\n  }\n}"
+        "query": "={\n  customers(first: 1, query: \"email:'{{ $json[\"body\"][\"mautic.lead_channel_subscription_changed\"][0][\"contact\"][\"fields\"][\"core\"][\"email\"][\"value\"] }}'\" ) {\n    edges {\n      node {\n        id\n        email\n        marketingOptInLevel\n      }\n    }\n  }\n}"
       },
       "id": "1bc94c14-ceda-42e1-94dc-1ac91ac72f8b",
       "name": "GraphQL",
       "type": "n8n-nodes-base.graphql",
       "typeVersion": 1,
       "position": [
-        440,
-        840
+        940,
+        700
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -255,11 +286,10 @@
     {
       "parameters": {
         "conditions": {
-          "number": [
+          "string": [
             {
-              "value1": "={{ $node[\"Kontaktsegmente einlesen\"].json[\"lists\"][\"1\"][\"id\"] }}",
-              "operation": "equal",
-              "value2": 1
+              "value1": "= {{ $node.Webhook1.json.body[\"mautic.lead_channel_subscription_changed\"][0].new_status }} ",
+              "value2": "contactable"
             }
           ]
         }
@@ -269,35 +299,9 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        680,
-        840
+        1180,
+        700
       ]
-    },
-    {
-      "parameters": {
-        "url": "=https://ma.lanakk.com/api/contacts/{{ $json[\"body\"][\"mautic.lead_post_save_update\"][0][\"contact\"][\"id\"] }}/segments",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "mauticOAuth2Api",
-        "options": {}
-      },
-      "id": "fdeca80d-3e71-43f0-b02e-11736038519a",
-      "name": "Kontaktsegmente einlesen",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 3,
-      "position": [
-        240,
-        840
-      ],
-      "credentials": {
-        "mauticOAuth2Api": {
-          "id": "20",
-          "name": "Mautic account"
-        },
-        "mauticApi": {
-          "id": "23",
-          "name": "Mautic account 2"
-        }
-      }
     },
     {
       "parameters": {
@@ -332,8 +336,8 @@
       "type": "n8n-nodes-base.graphql",
       "typeVersion": 1,
       "position": [
-        920,
-        980
+        1420,
+        840
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -355,8 +359,8 @@
       "type": "n8n-nodes-base.graphql",
       "typeVersion": 1,
       "position": [
-        920,
-        700
+        1420,
+        560
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -461,17 +465,80 @@
           "name": "lanakk.com"
         }
       }
+    },
+    {
+      "parameters": {
+        "action": "hmac",
+        "type": "SHA256",
+        "value": "={{ $json.data }}",
+        "dataPropertyName": "=key",
+        "secret": "0a9dcfe4f362625efc5a38bc709598c61869552fcfc1aceb8fc08edad8dd3825",
+        "encoding": "base64"
+      },
+      "id": "31deaf45-706d-4bcc-b92a-1f0ed7f8ff9e",
+      "name": "Crypto",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        460,
+        840
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json[\"headers\"][\"webhook-signature\"] }}",
+              "value2": "={{ $json.key }}"
+            }
+          ]
+        }
+      },
+      "id": "dec9961f-d754-4d87-980f-61853ea66a14",
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        680,
+        840
+      ]
+    },
+    {
+      "parameters": {
+        "setAllData": false,
+        "options": {}
+      },
+      "id": "cfff982c-953b-49fd-8d43-340ca7a1f447",
+      "name": "Move Binary Data",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        240,
+        840
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "9f471b45-d736-494d-9221-49c45f700c8b",
+      "name": "No Operation, do nothing1",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        940,
+        1000
+      ]
     }
   ],
   "pinData": {},
   "settings": {},
   "staticData": {
     "node:Shopify Trigger": {
-      "webhookId": 1264671260937
+      "webhookId": 1264992682249
     }
   },
   "tags": [],
   "triggerCount": 2,
-  "updatedAt": "2023-05-08T03:29:30.000Z",
-  "versionId": "c7e602bc-6a91-44f7-a82f-8afb75afde12"
+  "updatedAt": "2023-05-09T04:32:31.000Z",
+  "versionId": "9edfa535-aa10-45dc-a499-913ec16830a5"
 }

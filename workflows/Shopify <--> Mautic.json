@@ -288,11 +288,13 @@
         "conditions": {
           "string": [
             {
-              "value1": "= {{ $node.Webhook1.json.body[\"mautic.lead_channel_subscription_changed\"][0].new_status }} ",
-              "value2": "contactable"
+              "value1": "= {{ $node.Webhook1.json.body[\"mautic.lead_channel_subscription_changed\"][0].new_status }}",
+              "operation": "regex",
+              "value2": "=contactable"
             }
           ]
-        }
+        },
+        "combineOperation": "any"
       },
       "id": "162ccd38-f38c-4a76-8e56-1ab52b89601e",
       "name": "IF1",
@@ -534,11 +536,11 @@
   "settings": {},
   "staticData": {
     "node:Shopify Trigger": {
-      "webhookId": 1264992682249
+      "webhookId": 1265300766985
     }
   },
   "tags": [],
   "triggerCount": 2,
-  "updatedAt": "2023-05-09T04:32:31.000Z",
-  "versionId": "9edfa535-aa10-45dc-a499-913ec16830a5"
+  "updatedAt": "2023-05-10T04:10:34.000Z",
+  "versionId": "48541f3d-c3eb-4c0d-aec1-484085d7ec29"
 }

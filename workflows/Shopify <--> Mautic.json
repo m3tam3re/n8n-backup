@@ -331,7 +331,7 @@
         "endpoint": "https://lana-kk.myshopify.com/admin/api/2023-04/graphql.json",
         "requestFormat": "json",
         "query": "=mutation customerEmailMarketingConsentUpdate($input: CustomerEmailMarketingConsentUpdateInput!) {\n  customerEmailMarketingConsentUpdate(input: $input) {\n    customer {\n      id\n    }\n    userErrors {\n      field\n      message\n    }\n  }\n}",
-        "variables": "={  \"input\": {    \"customerId\": \"gid://shopify/Customer/2298279854143\",    \"emailMarketingConsent\": {      \"consentUpdatedAt\": \"{{ $now }}\",      \"marketingOptInLevel\": \"SINGLE_OPT_IN\",      \"marketingState\": \"UNSUBSCRIBED\"    }  }}"
+        "variables": "={  \"input\": {    \"customerId\": \"{{ $node[\"GraphQL\"].json[\"data\"][\"customers\"][\"edges\"][0][\"node\"][\"id\"] }}\",    \"emailMarketingConsent\": {      \"consentUpdatedAt\": \"{{ $now }}\",      \"marketingOptInLevel\": \"SINGLE_OPT_IN\",      \"marketingState\": \"UNSUBSCRIBED\"    }  }}"
       },
       "id": "d634f91d-8688-4503-9654-12a699e4dad6",
       "name": "GraphQL2",
@@ -354,7 +354,7 @@
         "endpoint": "https://lana-kk.myshopify.com/admin/api/2023-04/graphql.json",
         "requestFormat": "json",
         "query": "=mutation customerEmailMarketingConsentUpdate($input: CustomerEmailMarketingConsentUpdateInput!) {\n  customerEmailMarketingConsentUpdate(input: $input) {\n    customer {\n      id\n    }\n    userErrors {\n      field\n      message\n    }\n  }\n}",
-        "variables": "={  \"input\": {    \"customerId\": \"gid://shopify/Customer/2298279854143\",    \"emailMarketingConsent\": {      \"consentUpdatedAt\": \"{{ $now }}\",      \"marketingOptInLevel\": \"SINGLE_OPT_IN\",      \"marketingState\": \"SUBSCRIBED\"    }  }}"
+        "variables": "={  \"input\": {    \"customerId\": \"{{ $node[\"GraphQL\"].json[\"data\"][\"customers\"][\"edges\"][0][\"node\"][\"id\"] }}\",    \"emailMarketingConsent\": {      \"consentUpdatedAt\": \"{{ $now }}\",      \"marketingOptInLevel\": \"SINGLE_OPT_IN\",      \"marketingState\": \"SUBSCRIBED\"    }  }}"
       },
       "id": "dcf79e78-d4ba-4a55-bbc0-840c5c01dae4",
       "name": "Abonniert",
@@ -536,11 +536,11 @@
   "settings": {},
   "staticData": {
     "node:Shopify Trigger": {
-      "webhookId": 1265300766985
+      "webhookId": 1266229674249
     }
   },
   "tags": [],
   "triggerCount": 2,
-  "updatedAt": "2023-05-10T04:10:34.000Z",
-  "versionId": "48541f3d-c3eb-4c0d-aec1-484085d7ec29"
+  "updatedAt": "2023-05-15T03:54:53.000Z",
+  "versionId": "d7887c47-abde-49f2-8470-3bbfcde579fe"
 }

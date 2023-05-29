@@ -450,6 +450,7 @@
     },
     {
       "parameters": {
+        "authentication": "accessToken",
         "topic": "customers/update"
       },
       "id": "e34a2cf2-8ee5-4cb9-9a9c-9ecd422107df",
@@ -462,9 +463,9 @@
       ],
       "webhookId": "ebce58fc-45cf-4c1c-8427-3ffbaccdb440",
       "credentials": {
-        "shopifyApi": {
-          "id": "13",
-          "name": "lanakk.com"
+        "shopifyAccessTokenApi": {
+          "id": "25",
+          "name": "Shopify Access Token account"
         }
       }
     },
@@ -536,11 +537,11 @@
   "settings": {},
   "staticData": {
     "node:Shopify Trigger": {
-      "webhookId": 1268670890249
+      "webhookId": 1269953462537
     }
   },
   "tags": [],
   "triggerCount": 2,
-  "updatedAt": "2023-05-24T11:53:05.000Z",
-  "versionId": "d7887c47-abde-49f2-8470-3bbfcde579fe"
+  "updatedAt": "2023-05-29T14:21:50.000Z",
+  "versionId": "f04dd5cd-8f9e-4f54-a16c-51ffdb54b3b0"
 }

@@ -1,5 +1,5 @@
 {
-  "active": true,
+  "active": false,
   "connections": {
     "Auftragsdaten CSV einlesen": {
       "main": [
@@ -602,6 +602,6 @@
   },
   "tags": [],
   "triggerCount": 2,
-  "updatedAt": "2023-04-13T13:51:34.000Z",
-  "versionId": "ebc06ca9-45d1-4304-b2d7-cb585ed814a5"
+  "updatedAt": "2023-06-13T07:13:38.000Z",
+  "versionId": "565027a2-4087-4d05-88db-23b521331d38"
 }

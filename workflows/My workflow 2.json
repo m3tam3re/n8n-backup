@@ -1,241 +1,24 @@
 {
   "active": false,
-  "connections": {
-    "Email suchen": {
-      "main": [
-        [
-          {
-            "node": "IF",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "IF": {
-      "main": [
-        [
-          {
-            "node": "Segment hinzufügen",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Aus Segment entfernen",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Webhook": {
-      "main": [
-        [
-          {
-            "node": "Email suchen",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Webhook1": {
-      "main": [
-        [
-          {
-            "node": "HTTP Request",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request": {
-      "main": [
-        [
-          {
-            "node": "GraphQL",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    }
-  },
-  "createdAt": "2023-04-30T12:45:41.935Z",
-  "id": "11",
+  "connections": {},
+  "createdAt": "2023-06-28T10:20:31.415Z",
+  "id": "12",
   "name": "My workflow 2",
   "nodes": [
     {
       "parameters": {
-        "httpMethod": "POST",
-        "path": "c40eca92-295d-4172-b699-55fc1913603f",
-        "options": {}
-      },
-      "id": "fa144037-c609-4e1f-871c-b75bed8cdf9a",
-      "name": "Webhook",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 1,
-      "position": [
-        40,
-        260
-      ],
-      "webhookId": "c40eca92-295d-4172-b699-55fc1913603f"
-    },
-    {
-      "parameters": {
-        "authentication": "oAuth2",
-        "operation": "getAll",
-        "limit": 1,
-        "options": {
-          "search": "dev@lanakk.com"
-        }
-      },
-      "id": "34c7436f-21b8-400a-b754-baacf1f38ec9",
-      "name": "Email suchen",
-      "type": "n8n-nodes-base.mautic",
-      "typeVersion": 1,
-      "position": [
-        240,
-        260
-      ],
-      "credentials": {
-        "mauticOAuth2Api": {
-          "id": "20",
-          "name": "Mautic account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "authentication": "oAuth2",
-        "resource": "contactSegment",
-        "operation": "remove",
-        "contactId": "={{ $json.id }}",
-        "segmentId": 1
-      },
-      "id": "0b888d2a-3790-4182-bf62-73d99a1614a6",
-      "name": "Aus Segment entfernen",
-      "type": "n8n-nodes-base.mautic",
-      "typeVersion": 1,
-      "position": [
-        680,
-        380
-      ],
-      "credentials": {
-        "mauticOAuth2Api": {
-          "id": "20",
-          "name": "Mautic account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "boolean": [
-            {
-              "value1": "={{ $node.Webhook.json.body.accepts_marketing }}",
-              "value2": "={{ true }}"
-            }
-          ]
-        }
-      },
-      "id": "47173c1e-7a30-41c3-902d-3c271608c5e5",
-      "name": "IF",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 1,
-      "position": [
-        440,
-        260
-      ]
-    },
-    {
-      "parameters": {
-        "authentication": "oAuth2",
-        "resource": "contactSegment",
-        "contactId": "={{ $json.id }}",
-        "segmentId": 1
-      },
-      "id": "4db83f86-9ec7-41fa-8faf-7886eb539195",
-      "name": "Segment hinzufügen",
-      "type": "n8n-nodes-base.mautic",
-      "typeVersion": 1,
-      "position": [
-        680,
-        140
-      ],
-      "credentials": {
-        "mauticOAuth2Api": {
-          "id": "20",
-          "name": "Mautic account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "httpMethod": "POST",
-        "path": "c83eb6ce-40dd-418c-952a-ed62a051a00b",
-        "options": {}
-      },
-      "id": "4a01eed5-9378-47f3-98ab-e00848ba0093",
-      "name": "Webhook1",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 1,
-      "position": [
-        40,
-        840
-      ],
-      "webhookId": "c83eb6ce-40dd-418c-952a-ed62a051a00b"
-    },
-    {
-      "parameters": {
-        "url": "https://lana-kk.myshopify.com/admin/customers/search.json",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "shopifyApi",
-        "sendQuery": true,
-        "queryParameters": {
-          "parameters": [
-            {
-              "name": "query",
-              "value": "email:dev@lanakk.com"
-            },
-            {
-              "name": "fields",
-              "value": "email,id"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "dd2b8b8e-1929-49d0-88bc-3e2cc9aff981",
-      "name": "HTTP Request",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 3,
-      "position": [
-        260,
-        840
-      ],
-      "credentials": {
-        "shopifyApi": {
-          "id": "13",
-          "name": "lanakk.com"
-        }
-      }
-    },
-    {
-      "parameters": {
         "authentication": "headerAuth",
-        "requestMethod": "GET"
+        "endpoint": "https://lana-kk.myshopify.com/admin/api/2022-01/graphql.json",
+        "requestFormat": "json",
+        "query": "=query {\n\torders(first: 10, query: \"date:2023-06-01\") {\n\t\tedges {\n\t\t\tnode {\n\t\t\t\tname\n\t\t\t\tcreatedAt\n\t\t\t\tcurrentTotalPriceSet {\n\t\t\t\t\tshopMoney {\n\t\t\t\t\t\tamount\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\tcustomerJourneySummary {\n\t\t\t\t\tdaysToConversion\n\t\t\t\t\tmoments(first: 5) {\n\t\t\t\t\t\tedges {\n\t\t\t\t\t\t\tnode {\n\t\t\t\t\t\t\t\t... on CustomerVisit {\n\t\t\t\t\t\t\t\t\tlandingPage\n\t\t\t\t\t\t\t\t\tutmParameters {\n\t\t\t\t\t\t\t\t\t\tsource\n\t\t\t\t\t\t\t\t\t\tcampaign\n\t\t\t\t\t\t\t\t\t\tterm\n\t\t\t\t\t\t\t\t\t\tcontent\n\t\t\t\t\t\t\t\t\t\tmedium\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}\n"
       },
-      "id": "1bc94c14-ceda-42e1-94dc-1ac91ac72f8b",
-      "name": "GraphQL",
+      "id": "4b1c8e68-c3e8-47f5-a7be-205b1451b7bf",
+      "name": "GraphQL1",
       "type": "n8n-nodes-base.graphql",
       "typeVersion": 1,
       "position": [
-        480,
-        840
+        640,
+        620
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -250,6 +33,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2023-05-01T03:58:08.000Z",
-  "versionId": "84d292a2-6dea-4b1e-b454-e4fe5dbf816d"
+  "updatedAt": "2023-06-28T10:30:38.000Z",
+  "versionId": "5f072241-02cc-495c-9cea-b80591243e16"
 }

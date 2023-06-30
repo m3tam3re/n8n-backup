@@ -440,7 +440,8 @@
       "position": [
         2520,
         -520
-      ]
+      ],
+      "continueOnFail": true
     },
     {
       "parameters": {
@@ -512,14 +513,14 @@
   "settings": {},
   "staticData": {
     "node:Gmail Trigger": {
-      "lastTimeChecked": 1688066193,
+      "lastTimeChecked": 1688078300,
       "possibleDuplicates": [
-        "1890895fa55b771c"
+        "189094eb673a244f"
       ]
     }
   },
   "tags": [],
   "triggerCount": 1,
-  "updatedAt": "2023-06-29T19:17:18.000Z",
-  "versionId": "25daa2a4-b5e0-4360-b8bb-1ded9c07453f"
+  "updatedAt": "2023-06-30T07:39:09.000Z",
+  "versionId": "35a89946-4939-4858-a3fb-c55182e96184"
 }

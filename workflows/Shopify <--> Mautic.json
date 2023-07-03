@@ -264,8 +264,7 @@
     {
       "parameters": {
         "authentication": "headerAuth",
-        "endpoint": "https://lana-kk.myshopify.com/admin/api/2022-01/graphql.json",
-        "requestFormat": "json",
+        "endpoint": "https://lana-kk.myshopify.com/admin/api/2023-04/graphql.json",
         "query": "={\n  customers(first: 1, query: \"email:'{{ $json[\"body\"][\"mautic.lead_channel_subscription_changed\"][0][\"contact\"][\"fields\"][\"core\"][\"email\"][\"value\"] }}'\" ) {\n    edges {\n      node {\n        id\n        email\n        marketingOptInLevel\n      }\n    }\n  }\n}"
       },
       "id": "1bc94c14-ceda-42e1-94dc-1ac91ac72f8b",
@@ -278,8 +277,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "14",
-          "name": "Shopify lanakk.com"
+          "id": "26",
+          "name": "lanakk.com - Shopify"
         }
       }
     },
@@ -343,8 +342,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "14",
-          "name": "Shopify lanakk.com"
+          "id": "26",
+          "name": "lanakk.com - Shopify"
         }
       }
     },
@@ -366,8 +365,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "14",
-          "name": "Shopify lanakk.com"
+          "id": "26",
+          "name": "lanakk.com - Shopify"
         }
       }
     },
@@ -531,17 +530,31 @@
         940,
         1000
       ]
+    },
+    {
+      "parameters": {
+        "endpoint": "https://swapi-graphql.netlify.app/.netlify/functions/index",
+        "query": "query Query {   allFilms {     films {       title       director       releaseDate       speciesConnection {         species {           name           classification           homeworld {             name           }         }       }     }   } }"
+      },
+      "id": "fe1512a0-bb72-4ef1-b6db-f676336c3fbe",
+      "name": "GraphQL1",
+      "type": "n8n-nodes-base.graphql",
+      "typeVersion": 1,
+      "position": [
+        780,
+        -140
+      ]
     }
   ],
   "pinData": {},
   "settings": {},
   "staticData": {
     "node:Shopify Trigger": {
-      "webhookId": 1277448028425
+      "webhookId": 1278132093193
     }
   },
   "tags": [],
   "triggerCount": 2,
-  "updatedAt": "2023-06-28T11:10:33.000Z",
-  "versionId": "f04dd5cd-8f9e-4f54-a16c-51ffdb54b3b0"
+  "updatedAt": "2023-07-03T13:13:22.000Z",
+  "versionId": "71645759-216e-40ec-8b5c-3ba48b22cc4d"
 }

@@ -550,11 +550,11 @@
   "settings": {},
   "staticData": {
     "node:Shopify Trigger": {
-      "webhookId": 1278132093193
+      "webhookId": 1278503977225
     }
   },
   "tags": [],
   "triggerCount": 2,
-  "updatedAt": "2023-07-03T13:13:22.000Z",
+  "updatedAt": "2023-07-04T07:28:10.000Z",
   "versionId": "71645759-216e-40ec-8b5c-3ba48b22cc4d"
 }

@@ -81,16 +81,6 @@
             "node": "An Datev weiterleiten",
             "type": "main",
             "index": 0
-          },
-          {
-            "node": "AWS Textract",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Merge",
-            "type": "main",
-            "index": 1
           }
         ]
       ]
@@ -513,14 +503,14 @@
   "settings": {},
   "staticData": {
     "node:Gmail Trigger": {
-      "lastTimeChecked": 1688390164,
+      "lastTimeChecked": 1688449852,
       "possibleDuplicates": [
-        "1891be56352e5e00"
+        "1891f74600406d21"
       ]
     }
   },
   "tags": [],
   "triggerCount": 1,
-  "updatedAt": "2023-07-03T13:16:46.000Z",
-  "versionId": "35a89946-4939-4858-a3fb-c55182e96184"
+  "updatedAt": "2023-07-04T07:28:09.000Z",
+  "versionId": "a491b066-7560-4adf-8a1b-66848a1c51de"
 }

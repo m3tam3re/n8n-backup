@@ -503,14 +503,14 @@
   "settings": {},
   "staticData": {
     "node:Gmail Trigger": {
-      "lastTimeChecked": 1688546310,
+      "lastTimeChecked": 1688568473,
       "possibleDuplicates": [
-        "1892533fcff5a446"
+        "189268772907e164"
       ]
     }
   },
   "tags": [],
   "triggerCount": 1,
-  "updatedAt": "2023-07-05T08:38:44.000Z",
+  "updatedAt": "2023-07-05T14:49:45.000Z",
   "versionId": "a491b066-7560-4adf-8a1b-66848a1c51de"
 }

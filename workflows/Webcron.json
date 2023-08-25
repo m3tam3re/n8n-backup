@@ -13,8 +13,8 @@
       ]
     }
   },
-  "createdAt": "2023-02-21T04:38:04.209Z",
-  "id": "5",
+  "createdAt": "2023-08-25T09:28:20.711Z",
+  "id": "3",
   "name": "Webcron",
   "nodes": [
     {
@@ -27,13 +27,13 @@
           ]
         }
       },
-      "id": "361e5473-3df8-4543-8f80-c1eb9c8a1748",
+      "id": "84ffc791-5209-498c-bc3c-702d68c87a32",
       "name": "Schedule Trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1,
       "position": [
-        340,
-        420
+        360,
+        280
       ]
     },
     {
@@ -41,13 +41,13 @@
         "url": "https://cloud.lanakk.com/cron.php",
         "options": {}
       },
-      "id": "72f1dec2-c62b-4112-ba2a-b73dd9db267a",
+      "id": "1e80fd49-aad7-4f14-9533-a5d4776bd275",
       "name": "HTTP Request",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 3,
       "position": [
-        520,
-        420
+        540,
+        280
       ]
     }
   ],
@@ -60,6 +60,6 @@
   },
   "tags": [],
   "triggerCount": 1,
-  "updatedAt": "2023-03-30T06:48:30.000Z",
-  "versionId": null
+  "updatedAt": "2023-08-25T09:28:27.000Z",
+  "versionId": "e11908fd-bdbb-4134-bbcf-d90b4b038fa2"
 }

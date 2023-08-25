@@ -85,17 +85,6 @@
         ]
       ]
     },
-    "AWS Textract": {
-      "main": [
-        [
-          {
-            "node": "Code1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Merge": {
       "main": [
         [
@@ -135,8 +124,8 @@
       ]
     }
   },
-  "createdAt": "2023-03-27T11:07:01.918Z",
-  "id": "7",
+  "createdAt": "2023-08-25T09:10:33.270Z",
+  "id": "1",
   "name": "Rechnungen -> DATEV",
   "nodes": [
     {
@@ -154,17 +143,17 @@
           ]
         }
       },
-      "id": "b4421482-9533-4a70-a010-bc37198173de",
+      "id": "08aeeb55-7ea6-4e23-a9c4-2838a5249f2d",
       "name": "Gmail Trigger",
       "type": "n8n-nodes-base.gmailTrigger",
       "typeVersion": 1,
       "position": [
-        280,
-        -200
+        -860,
+        740
       ],
       "credentials": {
         "gmailOAuth2": {
-          "id": "16",
+          "id": "1",
           "name": "Gmail - buchhaltung@lanakk.com"
         }
       }
@@ -179,17 +168,17 @@
           "downloadAttachments": true
         }
       },
-      "id": "92850b56-b38e-49a1-8fd7-253b022a3fa2",
+      "id": "a194d44b-9610-4e7d-b8db-a4a09d2b8a30",
       "name": "Gmail",
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2,
       "position": [
-        500,
-        -200
+        -640,
+        740
       ],
       "credentials": {
         "gmailOAuth2": {
-          "id": "16",
+          "id": "1",
           "name": "Gmail - buchhaltung@lanakk.com"
         }
       }
@@ -211,13 +200,13 @@
           ]
         }
       },
-      "id": "d7bbeaa9-8961-4f71-a21c-11009aad9712",
+      "id": "554ad5d4-6891-47ec-a5a5-79cc01bedbcb",
       "name": "IF",
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        720,
-        -200
+        -420,
+        740
       ]
     },
     {
@@ -235,17 +224,17 @@
           }
         }
       },
-      "id": "92b1ec51-291e-43bb-9f62-96ab3acb1f6c",
+      "id": "05a0a406-d2b2-4043-accb-25d611f415c6",
       "name": "An Datev weiterleiten",
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2,
       "position": [
-        1780,
-        -100
+        640,
+        840
       ],
       "credentials": {
         "gmailOAuth2": {
-          "id": "16",
+          "id": "1",
           "name": "Gmail - buchhaltung@lanakk.com"
         }
       }
@@ -258,43 +247,43 @@
           "Label_5013070903895930344"
         ]
       },
-      "id": "94d4e183-8b86-48ea-9a7d-c620ce431b5e",
+      "id": "e4ca31e0-3ffe-4d2e-8250-2145e7dda8a6",
       "name": "Datev Label anhängen",
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2,
       "position": [
-        1980,
-        -100
+        840,
+        840
       ],
       "credentials": {
         "gmailOAuth2": {
-          "id": "16",
+          "id": "1",
           "name": "Gmail - buchhaltung@lanakk.com"
         }
       }
     },
     {
       "parameters": {},
-      "id": "a38e57c7-1953-45bd-87cc-c4bd9aaf4e57",
+      "id": "0b60c6c7-bbe1-45be-8674-266fde0d9ea6",
       "name": "NoOp",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        1000,
-        -100
+        -140,
+        840
       ]
     },
     {
       "parameters": {
         "jsCode": "\nitems = [];\n\nfor (const item of $input.all()) {\n     for (let i = 0; i < Object.keys(item.binary).length; i++) {\n        let newItem = {\n          \"json\": {},\n          \"binary\":  {}\n        };\n       if (item.binary[\"attachment_\" +i].fileExtension != \"pdf\"){\n         continue;\n       }\n        newItem.json = item.json;\n        newItem.binary.attachment_0 = item.binary[\"attachment_\" +i];\n        items.push(newItem);\n     }\n}\n\nreturn items;"
       },
-      "id": "9265ff9e-648b-4c83-90be-ae9cf3d96d9b",
+      "id": "1772cb30-9bb7-48b3-b990-e9fa05e82a64",
       "name": "Code",
       "type": "n8n-nodes-base.code",
       "typeVersion": 1,
       "position": [
-        1000,
-        -300
+        -140,
+        640
       ]
     },
     {
@@ -305,13 +294,13 @@
           "keepSource": true
         }
       },
-      "id": "d403f312-afc3-4b99-9344-38764a94d3b1",
+      "id": "646f92c1-2af7-46fe-9b3f-51bb17ba303f",
       "name": "Binärdaten zu JSON",
       "type": "n8n-nodes-base.moveBinaryData",
       "typeVersion": 1,
       "position": [
-        1220,
-        -300
+        80,
+        640
       ]
     },
     {
@@ -319,13 +308,13 @@
         "value": "={{$json.data}}",
         "dataPropertyName": "hash"
       },
-      "id": "a743c51c-d13b-4c7b-a6c6-7dfbc60c0904",
+      "id": "cf623347-4b7e-4d61-a877-ee7aab89c28f",
       "name": "Hash erzeugen",
       "type": "n8n-nodes-base.crypto",
       "typeVersion": 1,
       "position": [
-        1440,
-        -300
+        300,
+        640
       ]
     },
     {
@@ -356,40 +345,20 @@
           ]
         }
       },
-      "id": "6b746f53-17e9-49eb-804b-e5e2a8091589",
+      "id": "706ea9d9-acdc-4670-a47c-f32cec6d0a60",
       "name": "Dateien ablegen",
       "type": "n8n-nodes-base.s3",
       "typeVersion": 1,
       "position": [
-        2720,
-        -320
+        1580,
+        620
       ],
       "credentials": {
         "s3": {
-          "id": "17",
+          "id": "2",
           "name": "S3 account"
         }
       }
-    },
-    {
-      "parameters": {
-        "binaryPropertyName": "attachment_0"
-      },
-      "id": "46f3136d-a228-4ce5-9725-88882e967a4c",
-      "name": "AWS Textract",
-      "type": "n8n-nodes-base.awsTextract",
-      "typeVersion": 1,
-      "position": [
-        1780,
-        -520
-      ],
-      "credentials": {
-        "aws": {
-          "id": "15",
-          "name": "AWS account"
-        }
-      },
-      "continueOnFail": true
     },
     {
       "parameters": {
@@ -397,39 +366,39 @@
         "combinationMode": "mergeByPosition",
         "options": {}
       },
-      "id": "ed97437a-6dca-42ca-86b3-de5ac52b5892",
+      "id": "563526af-cb42-4857-b593-64ff7558515d",
       "name": "Merge",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 2,
       "position": [
-        2300,
-        -320
+        1160,
+        620
       ]
     },
     {
       "parameters": {
         "jsCode": "function getMonthAndYear(dateString) {\n  const dateArray = dateString.split('.');\n  const monthAbbreviations = ['JAN', 'FEB', 'MAR', 'APR', 'MAI', 'JUN', 'JUL', 'AUG', 'SEP', 'OKT', 'NOV', 'DEZ'];\n  const monthIndex = parseInt(dateArray[1]) - 1;\n  const month = monthAbbreviations[monthIndex];\n  let year = dateArray[2];\n  \n  if (year.length === 2) {\n    year = '20' + year;\n  }\n\n  return { month: month, year: year };\n}\n\nfor (const item of $input.all()) {\n  let period = getMonthAndYear(item.json.INVOICE_RECEIPT_DATE);\n  item.json.month = period.month;\n  item.json.year = period.year;\n\n  if (!item.json.INVOICE_RECEIPT_ID) {\n    item.json.INVOICE_RECEIPT_ID = \"UNBEKANNT\";\n    item.json.docType = \"UNBEKANNT\";\n    continue;\n  }\n\n  if (!item.json.TAX) {\n    item.json.TAX = 0; \n  }\n  \n  item.json.docType = \"RECHNUNG\";\n}\n\nreturn $input.all();"
       },
-      "id": "a62d461f-f487-4caf-aa38-8a1f2914c412",
+      "id": "74ec1239-4f1a-4d2c-a724-0dd229d85168",
       "name": "Code1",
       "type": "n8n-nodes-base.code",
       "typeVersion": 1,
       "position": [
-        1960,
-        -520
+        820,
+        420
       ]
     },
     {
       "parameters": {
         "jsCode": "const monthId = {\n  'JAN': 3852,\n  'FEB': 3853,\n  'MAR': 3854,\n  'APR': 3855,\n  'MAI': 3856,\n  'JUN': 3857,\n  'JUL': 3858,\n  'AUG': 3859,\n  'SEP': 3860,\n  'OKT': 3861,\n  'NOV': 3862,\n  'DEZ': 3863\n};\n\nconst yearId = {\n  '2015': 3864,\n  '2016': 3865,\n  '2017': 3866,\n  '2018': 3867,\n  '2019': 3868,\n  '2020': 3869,\n  '2021': 3870,\n  '2022': 3871,\n  '2023': 3872,\n  '2024': 3873\n};\nfor (const item of $input.all()) {\n  item.json.month = monthId[item.json.month];\n  item.json.year = yearId[item.json.year];\n  item.json.SUBTOTAL = item.json.SUBTOTAL.replace(',','.');\n  item.json.TAX = item.json.TAX.replace(',','.');\n  dateParts = item.json.INVOICE_RECEIPT_DATE.split('.');\n  item.json.INVOICE_RECEIPT_DATE = `${dateParts[2]}-${dateParts[1].padStart(2, '0')}-${dateParts[0].padStart(2, '0')}`;\n}\n\nreturn $input.all();"
       },
-      "id": "17ebb256-c137-4fed-8dbc-4c3163b09dd7",
+      "id": "cad2d889-f42a-4a45-a662-360aeedd1526",
       "name": "Code2",
       "type": "n8n-nodes-base.code",
       "typeVersion": 1,
       "position": [
-        2520,
-        -520
+        1380,
+        420
       ],
       "continueOnFail": true
     },
@@ -483,13 +452,13 @@
         },
         "options": {}
       },
-      "id": "cd342347-419f-462f-b93f-6eaea901be99",
+      "id": "7b86214e-4545-43eb-a49d-b5e9fb595f41",
       "name": "HTTP Request",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 3,
       "position": [
-        2720,
-        -520
+        1580,
+        420
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -503,14 +472,12 @@
   "settings": {},
   "staticData": {
     "node:Gmail Trigger": {
-      "lastTimeChecked": 1692776896,
-      "possibleDuplicates": [
-        "18a215d9b70829e8"
-      ]
+      "possibleDuplicates": [],
+      "lastTimeChecked": 1692955266
     }
   },
   "tags": [],
   "triggerCount": 1,
-  "updatedAt": "2023-08-23T07:49:13.000Z",
-  "versionId": "a491b066-7560-4adf-8a1b-66848a1c51de"
+  "updatedAt": "2023-08-25T09:21:06.000Z",
+  "versionId": "d5336b9a-260a-4f88-862e-edbbb760acb2"
 }

@@ -157,8 +157,8 @@
       ]
     }
   },
-  "createdAt": "2023-01-17T13:26:26.485Z",
-  "id": "1",
+  "createdAt": "2023-08-25T09:49:59.525Z",
+  "id": "5",
   "name": "MT - Aufträge",
   "nodes": [
     {
@@ -167,13 +167,13 @@
         "operation": "list",
         "path": "/out"
       },
-      "id": "77792d6c-723a-4021-a25b-866c87195fea",
+      "id": "ba2e889a-bb18-4892-8d24-5a55c2fbd6c7",
       "name": "FTP",
       "type": "n8n-nodes-base.ftp",
       "typeVersion": 1,
       "position": [
-        660,
-        460
+        -600,
+        400
       ],
       "credentials": {
         "sftp": {
@@ -198,10 +198,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2400,
-        500
+        1140,
+        440
       ],
-      "id": "c81d1331-8653-4693-ada1-6697dc9ee038",
+      "id": "00be2cc0-8c39-48ab-90d8-ca331c38d08e",
       "credentials": {
         "httpBasicAuth": {
           "id": "2",
@@ -218,13 +218,13 @@
           "headerRow": true
         }
       },
-      "id": "8ad49263-f0f0-4be8-84e3-7cee543e356b",
+      "id": "2c9c4207-9f54-4241-968e-bfb40b773746",
       "name": "Rückmeldung CSV erzeugen",
       "type": "n8n-nodes-base.spreadsheetFile",
       "typeVersion": 1,
       "position": [
-        900,
-        740
+        -360,
+        680
       ]
     },
     {
@@ -234,13 +234,13 @@
           "headerRow": true
         }
       },
-      "id": "5de70737-ab1b-48e7-8fd7-3a722fbc00a9",
+      "id": "44087b14-bb6a-40c6-8774-960d8146f57c",
       "name": "Auftragsdaten CSV einlesen",
       "type": "n8n-nodes-base.spreadsheetFile",
       "typeVersion": 1,
       "position": [
-        1440,
-        480
+        180,
+        420
       ]
     },
     {
@@ -255,13 +255,13 @@
           ]
         }
       },
-      "id": "d54af494-70dc-46ac-ad19-91c90fa53f69",
+      "id": "8e5876bb-5c18-4e23-a9cc-b1de8dca44cd",
       "name": "PDF",
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1120,
-        460
+        -140,
+        400
       ]
     },
     {
@@ -269,13 +269,13 @@
         "protocol": "sftp",
         "path": "=/out/{{$json[\"name\"]}}"
       },
-      "id": "ee40a4c2-d570-4a61-8373-e4e4c46536fd",
+      "id": "483244e0-0e2b-4ddf-b9b4-e281553b44e4",
       "name": "FTP1",
       "type": "n8n-nodes-base.ftp",
       "typeVersion": 1,
       "position": [
-        900,
-        460
+        -360,
+        400
       ],
       "credentials": {
         "sftp": {
@@ -292,13 +292,13 @@
         "newPath": "=/archiv/{{$node[\"PDF\"].binary.data.fileName}}",
         "options": {}
       },
-      "id": "8e265faa-72f6-4d78-92f2-d946aa866f2f",
+      "id": "773eb234-4f45-4ce5-bb54-aa5bb92edd22",
       "name": "Ins Archiv verschieben",
       "type": "n8n-nodes-base.ftp",
       "typeVersion": 1,
       "position": [
-        2600,
-        500
+        1340,
+        440
       ],
       "credentials": {
         "sftp": {
@@ -313,13 +313,13 @@
         "operation": "upload",
         "path": "=/in/{{$binary.data.fileName}}"
       },
-      "id": "cd13302a-3bcf-4fdf-88a5-1ef5a40a725f",
+      "id": "acb8aa11-0841-4f51-9a4f-cfed549b018c",
       "name": "FTP2",
       "type": "n8n-nodes-base.ftp",
       "typeVersion": 1,
       "position": [
-        1140,
-        740
+        -120,
+        680
       ],
       "credentials": {
         "sftp": {
@@ -332,13 +332,13 @@
       "parameters": {
         "jsCode": "let lines = [];\n\nfor (const item of $input.all()) {\n  let parcel_type;\n  switch(item.json.query.id) {\n    case \"Eurocourier\":\n       parcel_type = \"EC_STD_NATIONAL\";\n    break;\n    case \"GLS\":\n      parcel_type = \"GLS_STD_NATIONAL\";\n    break;\n  default:\n      parcel_type = \"DPD_STD_NATIONAL\";\n}\n  let line = {\n    \"TB_ORDER_ID\": item.json.query.id,\n    \"ORDER_PAID\" : 0,\n    \"TYPE\" : item.json.query.type,\n    \"PARCEL_TYPE\": parcel_type,\n    \"SHIP_CODE\" : item.json.query.shipment,\n    \"COMMENT_INTERN\" : \"\",\n    \"COMMENT\" : \"\",\n  }; \n  lines.push(line);\n}\n\nreturn lines;"
       },
-      "id": "3f76d0dd-3525-4cdb-baab-e2205621ec39",
+      "id": "8cad55fd-7cf8-4264-b733-8c0887009c89",
       "name": "In Ausgabeformat umwandeln",
       "type": "n8n-nodes-base.code",
       "typeVersion": 1,
       "position": [
-        660,
-        740
+        -600,
+        680
       ]
     },
     {
@@ -346,13 +346,13 @@
         "path": "1730d70c-f532-4b6f-a20e-e2fc7edb2d45",
         "options": {}
       },
-      "id": "5a16780d-19a1-4967-8710-9225ddc59ddf",
+      "id": "5661688b-d65b-4703-a422-67387bfd37c3",
       "name": "Webhook für Billbee",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        420,
-        740
+        -840,
+        680
       ],
       "webhookId": "1730d70c-f532-4b6f-a20e-e2fc7edb2d45"
     },
@@ -366,13 +366,13 @@
           ]
         }
       },
-      "id": "47aa99b1-e403-47c1-a8d9-f6d10c2ec553",
+      "id": "37ae4d6d-fc48-475f-9ed2-8837774daab1",
       "name": "Schedule Trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1,
       "position": [
-        420,
-        460
+        -840,
+        400
       ]
     },
     {
@@ -512,13 +512,13 @@
           "dotNotation": true
         }
       },
-      "id": "50b02a14-bac8-4748-be52-d2e789633254",
+      "id": "2b43b12b-ab1e-4f74-b859-15969e180160",
       "name": "In Billbee Format umwandeln",
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        1720,
-        480
+        460,
+        420
       ]
     },
     {
@@ -529,13 +529,13 @@
         "newPath": "=/archiv/{{$json[\"name\"]}}",
         "options": {}
       },
-      "id": "e3fe469c-7ee9-4435-8cff-7ad964fe3b02",
+      "id": "1c973d28-8bbe-4cb8-9af3-3153107afac0",
       "name": "Ins Archiv verschieben1",
       "type": "n8n-nodes-base.ftp",
       "typeVersion": 1,
       "position": [
-        1720,
-        220
+        460,
+        160
       ],
       "credentials": {
         "sftp": {
@@ -553,13 +553,13 @@
         ],
         "options": {}
       },
-      "id": "101e2897-0ec5-4401-90d4-1ee5e4b96e14",
+      "id": "6aadcdef-1bee-4584-85b3-1bc4e56900a8",
       "name": "Dokumente hochladen",
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 2,
       "position": [
-        1440,
-        220
+        180,
+        160
       ],
       "credentials": {
         "googleDriveOAuth2Api": {
@@ -572,36 +572,32 @@
       "parameters": {
         "command": "echo \"$BILBEE_API_KEY\""
       },
-      "id": "105c3214-b5e7-43b3-b3f1-95a4de48bdd6",
+      "id": "f05bbf61-9fdf-4a34-b7cc-8abcfd70c346",
       "name": "Api-Key",
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
       "position": [
-        1960,
-        640
+        700,
+        580
       ]
     },
     {
       "parameters": {},
-      "id": "612b2d47-ff4e-495f-9857-6df986e8b45b",
+      "id": "7d776c8e-801b-461e-8576-03c45fb60d4c",
       "name": "Merge",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 2,
       "position": [
-        2160,
-        500
+        900,
+        440
       ]
     }
   ],
   "pinData": {},
   "settings": {},
-  "staticData": {
-    "node:Schedule Trigger": {
-      "recurrencyRules": []
-    }
-  },
+  "staticData": null,
   "tags": [],
-  "triggerCount": 2,
-  "updatedAt": "2023-06-13T07:13:38.000Z",
-  "versionId": "565027a2-4087-4d05-88db-23b521331d38"
+  "triggerCount": 0,
+  "updatedAt": "2023-08-25T09:49:59.525Z",
+  "versionId": "c4fed224-596d-4265-ad0d-3f68e9b3656c"
 }

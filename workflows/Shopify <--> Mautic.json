@@ -169,8 +169,8 @@
       ]
     }
   },
-  "createdAt": "2023-04-30T12:45:41.935Z",
-  "id": "11",
+  "createdAt": "2023-08-25T09:30:15.825Z",
+  "id": "4",
   "name": "Shopify <--> Mautic",
   "nodes": [
     {
@@ -182,18 +182,18 @@
           "search": "={{ $json.email }}"
         }
       },
-      "id": "34c7436f-21b8-400a-b754-baacf1f38ec9",
+      "id": "2ab62e7d-70aa-444e-a4a3-d5b6f4db23e4",
       "name": "Email suchen",
       "type": "n8n-nodes-base.mautic",
       "typeVersion": 1,
       "position": [
-        240,
-        0
+        -360,
+        300
       ],
       "alwaysOutputData": true,
       "credentials": {
         "mauticOAuth2Api": {
-          "id": "20",
+          "id": "6",
           "name": "Mautic account"
         }
       }
@@ -206,17 +206,17 @@
         "contactId": "={{ $json.id }}",
         "segmentId": 1
       },
-      "id": "0b888d2a-3790-4182-bf62-73d99a1614a6",
+      "id": "830fd450-d149-47b1-afd0-5999ecdcdf54",
       "name": "Aus Segment entfernen",
       "type": "n8n-nodes-base.mautic",
       "typeVersion": 1,
       "position": [
-        1380,
-        100
+        780,
+        400
       ],
       "credentials": {
         "mauticOAuth2Api": {
-          "id": "20",
+          "id": "6",
           "name": "Mautic account"
         }
       }
@@ -228,17 +228,17 @@
         "contactId": "={{ $json.id }}",
         "segmentId": 1
       },
-      "id": "4db83f86-9ec7-41fa-8faf-7886eb539195",
+      "id": "a1f319db-2e89-42d7-a018-a5f008e918dc",
       "name": "Segment hinzufügen",
       "type": "n8n-nodes-base.mautic",
       "typeVersion": 1,
       "position": [
-        1380,
-        -140
+        780,
+        160
       ],
       "credentials": {
         "mauticOAuth2Api": {
-          "id": "20",
+          "id": "6",
           "name": "Mautic account"
         }
       }
@@ -251,13 +251,13 @@
           "rawBody": true
         }
       },
-      "id": "4a01eed5-9378-47f3-98ab-e00848ba0093",
+      "id": "98653876-b909-4416-a8ee-aa5857078b48",
       "name": "Webhook1",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        40,
-        840
+        -560,
+        1140
       ],
       "webhookId": "c83eb6ce-40dd-418c-952a-ed62a051a00b"
     },
@@ -267,17 +267,17 @@
         "endpoint": "https://lana-kk.myshopify.com/admin/api/2023-04/graphql.json",
         "query": "={\n  customers(first: 1, query: \"email:'{{ $json[\"body\"][\"mautic.lead_channel_subscription_changed\"][0][\"contact\"][\"fields\"][\"core\"][\"email\"][\"value\"] }}'\" ) {\n    edges {\n      node {\n        id\n        email\n        marketingOptInLevel\n      }\n    }\n  }\n}"
       },
-      "id": "1bc94c14-ceda-42e1-94dc-1ac91ac72f8b",
+      "id": "08ea065c-cc8d-4020-89c0-0aa35d99a373",
       "name": "GraphQL",
       "type": "n8n-nodes-base.graphql",
       "typeVersion": 1,
       "position": [
-        940,
-        700
+        340,
+        1000
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "26",
+          "id": "5",
           "name": "lanakk.com - Shopify"
         }
       }
@@ -295,13 +295,13 @@
         },
         "combineOperation": "any"
       },
-      "id": "162ccd38-f38c-4a76-8e56-1ab52b89601e",
+      "id": "107bae94-57b1-4991-a8eb-41e85e5f85af",
       "name": "IF1",
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1180,
-        700
+        580,
+        1000
       ]
     },
     {
@@ -315,13 +315,13 @@
           ]
         }
       },
-      "id": "47173c1e-7a30-41c3-902d-3c271608c5e5",
+      "id": "b83cfae2-25dc-4ed6-8133-73ee7bb94b29",
       "name": "Email vorhanden?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1140,
-        -20
+        540,
+        280
       ]
     },
     {
@@ -332,17 +332,17 @@
         "query": "=mutation customerEmailMarketingConsentUpdate($input: CustomerEmailMarketingConsentUpdateInput!) {\n  customerEmailMarketingConsentUpdate(input: $input) {\n    customer {\n      id\n    }\n    userErrors {\n      field\n      message\n    }\n  }\n}",
         "variables": "={  \"input\": {    \"customerId\": \"{{ $node[\"GraphQL\"].json[\"data\"][\"customers\"][\"edges\"][0][\"node\"][\"id\"] }}\",    \"emailMarketingConsent\": {      \"consentUpdatedAt\": \"{{ $now }}\",      \"marketingOptInLevel\": \"SINGLE_OPT_IN\",      \"marketingState\": \"UNSUBSCRIBED\"    }  }}"
       },
-      "id": "d634f91d-8688-4503-9654-12a699e4dad6",
+      "id": "4815d1b0-2455-4bb0-8dd3-717b216e60a1",
       "name": "GraphQL2",
       "type": "n8n-nodes-base.graphql",
       "typeVersion": 1,
       "position": [
-        1420,
-        840
+        820,
+        1140
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "26",
+          "id": "5",
           "name": "lanakk.com - Shopify"
         }
       }
@@ -355,17 +355,17 @@
         "query": "=mutation customerEmailMarketingConsentUpdate($input: CustomerEmailMarketingConsentUpdateInput!) {\n  customerEmailMarketingConsentUpdate(input: $input) {\n    customer {\n      id\n    }\n    userErrors {\n      field\n      message\n    }\n  }\n}",
         "variables": "={  \"input\": {    \"customerId\": \"{{ $node[\"GraphQL\"].json[\"data\"][\"customers\"][\"edges\"][0][\"node\"][\"id\"] }}\",    \"emailMarketingConsent\": {      \"consentUpdatedAt\": \"{{ $now }}\",      \"marketingOptInLevel\": \"SINGLE_OPT_IN\",      \"marketingState\": \"SUBSCRIBED\"    }  }}"
       },
-      "id": "dcf79e78-d4ba-4a55-bbc0-840c5c01dae4",
+      "id": "52d46a11-f459-449c-b93e-2890a94b1e65",
       "name": "Abonniert",
       "type": "n8n-nodes-base.graphql",
       "typeVersion": 1,
       "position": [
-        1420,
-        560
+        820,
+        860
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "26",
+          "id": "5",
           "name": "lanakk.com - Shopify"
         }
       }
@@ -380,30 +380,30 @@
         "additionalFields": {},
         "options": {}
       },
-      "id": "72dff69d-d130-4533-979f-341c220925d1",
+      "id": "cb999a33-6849-4e36-8141-b5e80c19b175",
       "name": "Mautic",
       "type": "n8n-nodes-base.mautic",
       "typeVersion": 1,
       "position": [
-        940,
-        140
+        340,
+        440
       ],
       "credentials": {
         "mauticOAuth2Api": {
-          "id": "20",
+          "id": "6",
           "name": "Mautic account"
         }
       }
     },
     {
       "parameters": {},
-      "id": "9e72fd94-5416-4186-9738-0b1a19330f2c",
+      "id": "614139b6-28fa-4983-9732-9cfaad82067a",
       "name": "No Operation, do nothing",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        940,
-        340
+        340,
+        640
       ]
     },
     {
@@ -417,13 +417,13 @@
           ]
         }
       },
-      "id": "d81ac980-1063-462f-9812-44239e6fc49d",
+      "id": "2e6cebc8-94ce-473c-9248-f5cc359ee300",
       "name": "Kontakt gefunden?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        460,
-        0
+        -140,
+        300
       ],
       "alwaysOutputData": false
     },
@@ -438,13 +438,13 @@
           ]
         }
       },
-      "id": "580be6e1-8658-4741-b52a-43d22faa7e23",
+      "id": "f6faee14-d93d-4b85-b8fa-9f4d8c127594",
       "name": "Marketing Einwilligung?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        660,
-        160
+        60,
+        460
       ]
     },
     {
@@ -452,18 +452,18 @@
         "authentication": "accessToken",
         "topic": "customers/update"
       },
-      "id": "e34a2cf2-8ee5-4cb9-9a9c-9ecd422107df",
+      "id": "b20ef5e3-b002-4d29-bacf-cb731237803b",
       "name": "Shopify Trigger",
       "type": "n8n-nodes-base.shopifyTrigger",
       "typeVersion": 1,
       "position": [
-        40,
-        0
+        -560,
+        300
       ],
       "webhookId": "ebce58fc-45cf-4c1c-8427-3ffbaccdb440",
       "credentials": {
         "shopifyAccessTokenApi": {
-          "id": "25",
+          "id": "11",
           "name": "Shopify Access Token account"
         }
       }
@@ -477,13 +477,13 @@
         "secret": "0a9dcfe4f362625efc5a38bc709598c61869552fcfc1aceb8fc08edad8dd3825",
         "encoding": "base64"
       },
-      "id": "31deaf45-706d-4bcc-b92a-1f0ed7f8ff9e",
+      "id": "2c64dae7-5409-4767-92ab-43239bb038f0",
       "name": "Crypto",
       "type": "n8n-nodes-base.crypto",
       "typeVersion": 1,
       "position": [
-        460,
-        840
+        -140,
+        1140
       ]
     },
     {
@@ -497,13 +497,13 @@
           ]
         }
       },
-      "id": "dec9961f-d754-4d87-980f-61853ea66a14",
+      "id": "d16fae8c-6b13-42cb-831b-437c41919b1b",
       "name": "IF",
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        680,
-        840
+        80,
+        1140
       ]
     },
     {
@@ -511,24 +511,24 @@
         "setAllData": false,
         "options": {}
       },
-      "id": "cfff982c-953b-49fd-8d43-340ca7a1f447",
+      "id": "2677101f-c550-4748-afef-e41fe1af0604",
       "name": "Move Binary Data",
       "type": "n8n-nodes-base.moveBinaryData",
       "typeVersion": 1,
       "position": [
-        240,
-        840
+        -360,
+        1140
       ]
     },
     {
       "parameters": {},
-      "id": "9f471b45-d736-494d-9221-49c45f700c8b",
+      "id": "6cb7bd1f-939d-43af-966e-171a1ba3d7da",
       "name": "No Operation, do nothing1",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        940,
-        1000
+        340,
+        1300
       ]
     },
     {
@@ -536,13 +536,13 @@
         "endpoint": "https://swapi-graphql.netlify.app/.netlify/functions/index",
         "query": "query Query {   allFilms {     films {       title       director       releaseDate       speciesConnection {         species {           name           classification           homeworld {             name           }         }       }     }   } }"
       },
-      "id": "fe1512a0-bb72-4ef1-b6db-f676336c3fbe",
+      "id": "49c0a40f-d1a2-453a-ac5b-37230206772f",
       "name": "GraphQL1",
       "type": "n8n-nodes-base.graphql",
       "typeVersion": 1,
       "position": [
-        780,
-        -140
+        180,
+        160
       ]
     }
   ],
@@ -550,11 +550,11 @@
   "settings": {},
   "staticData": {
     "node:Shopify Trigger": {
-      "webhookId": 1286935085321
+      "webhookId": 1289446981897
     }
   },
   "tags": [],
   "triggerCount": 2,
-  "updatedAt": "2023-08-07T06:58:05.000Z",
-  "versionId": "71645759-216e-40ec-8b5c-3ba48b22cc4d"
+  "updatedAt": "2023-08-25T09:48:56.000Z",
+  "versionId": "bd1863bc-07f6-4715-b7de-a081c5ac6cc8"
 }

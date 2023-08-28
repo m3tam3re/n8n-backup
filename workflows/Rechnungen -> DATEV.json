@@ -473,13 +473,13 @@
   "staticData": {
     "node:Gmail Trigger": {
       "possibleDuplicates": [
-        "18a2ce0756e47515"
+        "18a3c54a04a0db71"
       ],
-      "lastTimeChecked": 1692970021
+      "lastTimeChecked": 1693229292
     }
   },
   "tags": [],
   "triggerCount": 1,
-  "updatedAt": "2023-08-25T13:27:59.000Z",
+  "updatedAt": "2023-08-28T13:28:59.000Z",
   "versionId": "d5336b9a-260a-4f88-862e-edbbb760acb2"
 }

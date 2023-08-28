@@ -373,9 +373,9 @@
     {
       "parameters": {
         "authentication": "oAuth2",
-        "email": "={{ $node[\"Webhook\"].json[\"body\"][\"email\"] }}",
-        "firstName": "={{ $node[\"Webhook\"].json[\"body\"][\"first_name\"] }}",
-        "lastName": "={{ $node[\"Webhook\"].json[\"body\"][\"last_name\"] }}",
+        "email": "={{ $('Shopify Trigger').item.json[\"email\"] }}",
+        "firstName": "={{ $('Shopify Trigger').item.json[\"first_name\"] }}",
+        "lastName": "={{ $('Shopify Trigger').item.json[\"last_name\"] }}",
         "company": "=",
         "additionalFields": {},
         "options": {}
@@ -432,7 +432,7 @@
         "conditions": {
           "boolean": [
             {
-              "value1": "={{ $node.Webhook.json.body.accepts_marketing }}",
+              "value1": "={{ $('Shopify Trigger').item.json[\"accepts_marketing\"] }}",
               "value2": "={{ true }}"
             }
           ]
@@ -550,11 +550,11 @@
   "settings": {},
   "staticData": {
     "node:Shopify Trigger": {
-      "webhookId": 1289465594121
+      "webhookId": 1289797501193
     }
   },
   "tags": [],
   "triggerCount": 2,
-  "updatedAt": "2023-08-25T11:36:41.000Z",
-  "versionId": "bd1863bc-07f6-4715-b7de-a081c5ac6cc8"
+  "updatedAt": "2023-08-28T12:42:26.000Z",
+  "versionId": "6f7a68f7-7b82-48d6-ad81-32f0a75e5954"
 }

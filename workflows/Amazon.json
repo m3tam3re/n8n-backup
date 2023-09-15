@@ -1,0 +1,17 @@
+{
+  "active": false,
+  "connections": {},
+  "createdAt": "2023-09-15T19:39:13.020Z",
+  "id": "CRSrU0GuuKAqDFTw",
+  "name": "Amazon",
+  "nodes": [],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2023-09-15T19:39:13.020Z",
+  "versionId": "5be77d42-969a-4339-beae-2880e417c6ac"
+}

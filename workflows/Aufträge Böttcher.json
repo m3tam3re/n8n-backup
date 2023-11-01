@@ -1,0 +1,386 @@
+{
+  "active": false,
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "An Datev weiterleiten": {
+      "main": [
+        [
+          {
+            "node": "Datev Label anhängen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Spreadsheet File",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Spreadsheet File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Binärdaten zu JSON": {
+      "main": [
+        [
+          {
+            "node": "Hash erzeugen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hash erzeugen": {
+      "main": [
+        [
+          {
+            "node": "An Datev weiterleiten",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Spreadsheet File": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-11-01T10:32:45.897Z",
+  "id": "7qpiCqvr7rDKs4vZ",
+  "name": "Aufträge Böttcher",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {
+          "labelIds": [
+            "INBOX"
+          ]
+        }
+      },
+      "id": "ef9432d8-4bb8-4796-acb8-301549d38f2d",
+      "name": "Gmail Trigger",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1,
+      "position": [
+        -860,
+        740
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "1",
+          "name": "Gmail - buchhaltung@lanakk.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "messageId": "=18b8a733e7ed6b2e",
+        "simple": false,
+        "options": {
+          "dataPropertyAttachmentsPrefixName": "attachment_",
+          "downloadAttachments": true
+        }
+      },
+      "id": "67c031f2-412c-4752-808a-5b1797176f4e",
+      "name": "Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        -640,
+        740
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "1",
+          "name": "Gmail - buchhaltung@lanakk.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$jmespath($binary, \"*.[fileExtension]\")}}",
+              "operation": "contains",
+              "value2": "xlsx"
+            },
+            {
+              "value1": "={{$json[\"labelIds\"][1]}}",
+              "operation": "notEqual",
+              "value2": "SENT"
+            }
+          ]
+        }
+      },
+      "id": "9f5fddf2-87ad-4839-93a0-8cb4b30db525",
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -420,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "79e9685d-6952-420b-a9b0-db1950def732@uploadmail.datev.de",
+        "subject": "=Neuer Beleg - {{$now}}",
+        "message": "=",
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {
+                "property": "attachment_0"
+              }
+            ]
+          }
+        }
+      },
+      "id": "6fa510cb-209f-4d36-aeff-a8d9f88859e5",
+      "name": "An Datev weiterleiten",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        1180,
+        540
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "1",
+          "name": "Gmail - buchhaltung@lanakk.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{$node[\"An Datev weiterleiten\"].json[\"id\"]}}",
+        "labelIds": [
+          "Label_5013070903895930344"
+        ]
+      },
+      "id": "96b6f97a-d4ec-4237-a4d1-881bae13f48d",
+      "name": "Datev Label anhängen",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        1380,
+        540
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "1",
+          "name": "Gmail - buchhaltung@lanakk.com"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "b62f1daf-b550-4a33-95d3-1fb804d886fb",
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        840
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nitems = [];\n\nfor (const item of $input.all()) {\n     for (let i = 0; i < Object.keys(item.binary).length; i++) {\n        let newItem = {\n          \"json\": {},\n          \"binary\":  {}\n        };\n       if (item.binary[\"attachment_\" +i].fileExtension != \"xlsx\"){\n         continue;\n       }\n        newItem.json = item.json;\n        newItem.binary.attachment_0 = item.binary[\"attachment_\" +i];\n        items.push(newItem);\n     }\n}\n\nreturn items;"
+      },
+      "id": "eb50db9a-c93e-41b3-a18e-e83da4478db5",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "setAllData": false,
+        "sourceKey": "=attachment_0",
+        "options": {
+          "keepSource": true
+        }
+      },
+      "id": "a20af92b-8583-443a-929a-3ead4eb4d5e0",
+      "name": "Binärdaten zu JSON",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        940,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "value": "={{$json.data}}",
+        "dataPropertyName": "hash"
+      },
+      "id": "55c728e6-e705-43a6-aea9-f1a2e0bed852",
+      "name": "Hash erzeugen",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        840,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "messageId": "={{$json[\"id\"]}}",
+        "simple": false,
+        "options": {
+          "dataPropertyAttachmentsPrefixName": "attachment_",
+          "downloadAttachments": true
+        }
+      },
+      "id": "7c6d0af6-3d2c-4640-b994-2916a94005cc",
+      "name": "Gmail1",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        -460,
+        420
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "1",
+          "name": "Gmail - buchhaltung@lanakk.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "attachment_0",
+        "options": {
+          "headerRow": true,
+          "range": "29"
+        }
+      },
+      "id": "2b4393cd-b228-4716-af31-7a7315dcb5ef",
+      "name": "Spreadsheet File",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 2,
+      "position": [
+        140,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "options": {}
+      },
+      "id": "e06634d2-3c66-4c12-9c21-101c3cdb0250",
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        380,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "attachment_0",
+        "options": {
+          "readAsString": true,
+          "range": "12"
+        }
+      },
+      "id": "54970c46-06a5-4e34-9b47-7ee9295d2798",
+      "name": "Spreadsheet File1",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 2,
+      "position": [
+        140,
+        400
+      ]
+    }
+  ],
+  "pinData": {},
+  "settings": {},
+  "staticData": {
+    "node:Gmail Trigger": {
+      "possibleDuplicates": [
+        "18b8a70efc6daffe"
+      ],
+      "lastTimeChecked": 1698834738
+    }
+  },
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2023-11-01T13:49:37.000Z",
+  "versionId": "5d93d178-a968-44cf-9e74-72635a14fd4e"
+}

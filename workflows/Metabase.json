@@ -1,0 +1,63 @@
+{
+  "active": false,
+  "connections": {
+    "When clicking \"Execute Workflow\"": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-11-22T09:05:29.242Z",
+  "id": "rOhxbVo7OL6XxyB3",
+  "meta": null,
+  "name": "Metabase",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "bc58b35d-4d05-481a-9791-0d966772ceb2",
+      "name": "When clicking \"Execute Workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        920,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT o.order_id, c.first_name\nFROM orders as o \nJOIN customers as c ON o.customer_id = c.customer_id",
+        "options": {}
+      },
+      "id": "ac15f2bd-2d4d-4e37-961b-6d75d1299f54",
+      "name": "Postgres",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.3,
+      "position": [
+        1140,
+        420
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "JW5wwsSY4obQbCBb",
+          "name": "Postgres - warehouse"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2023-11-22T10:24:00.000Z",
+  "versionId": "ab19561d-dd5e-417a-9c4f-b945a4bbceb6"
+}

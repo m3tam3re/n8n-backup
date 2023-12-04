@@ -1,11 +1,38 @@
 {
   "active": false,
   "connections": {
-    "When clicking \"Execute Workflow\"": {
+    "Success?": {
       "main": [
         [
           {
-            "node": "Google Ads",
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Success?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Edit Fields3",
             "type": "main",
             "index": 0
           }
@@ -13,48 +40,124 @@
       ]
     }
   },
-  "createdAt": "2023-04-25T14:20:01.248Z",
-  "id": "10",
+  "createdAt": "2023-12-04T08:45:57.778Z",
+  "id": "o9uPy8XY0bMFCS9H",
+  "meta": null,
   "name": "My workflow",
   "nodes": [
     {
-      "parameters": {},
-      "id": "0fd74cd9-739b-4624-b0a4-7eb6c3003953",
-      "name": "When clicking \"Execute Workflow\"",
-      "type": "n8n-nodes-base.manualTrigger",
-      "typeVersion": 1,
+      "parameters": {
+        "options": {}
+      },
+      "id": "5cd78676-a0bd-4536-8759-f996d97b4254",
+      "name": "Edit Fields2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.1,
       "position": [
-        1140,
-        560
+        860,
+        660
       ]
     },
     {
       "parameters": {
-        "managerCustomerId": "661-871-3180",
-        "clientCustomerId": "209-455-0926",
-        "additionalOptions": {}
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.statusCode }}",
+              "operation": "equal",
+              "value2": 200
+            }
+          ]
+        }
       },
-      "id": "519d526a-434d-45b9-a3e2-0b8e3a4fa056",
-      "name": "Google Ads",
-      "type": "n8n-nodes-base.googleAds",
+      "id": "4f308b2e-f65b-4879-a566-6e6ebafbf125",
+      "name": "Success?",
+      "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1340,
-        560
+        0,
+        -1340
+      ]
+    },
+    {
+      "parameters": {
+        "unit": "seconds"
+      },
+      "id": "c06f9de4-8423-4104-bf3b-fe9eb49e447e",
+      "name": "Wait",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        220,
+        -1360
+      ],
+      "webhookId": "de46ac63-1976-47ce-a91c-2d96bbd61bad"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "8f2309ea-1d47-4542-8202-36d23cbdefa7",
+      "name": "Edit Fields3",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.1,
+      "position": [
+        0,
+        -1580
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.billbee.io/api/v1/orders",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "pageSize",
+              "value": "250"
+            },
+            {
+              "name": "page",
+              "value": "={{$runIndex + 1}}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Billbee-Api-Key",
+              "value": "2855BE2C-1D67-4AB0-9DEB-3073E6D27B1C"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "25d5e4e0-a202-46c7-9df8-b72721fe0861",
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -260,
+        -1340
       ],
       "credentials": {
-        "googleAdsOAuth2Api": {
-          "id": "21",
-          "name": "Google Ads account"
+        "httpBasicAuth": {
+          "id": "MM5S4dq8ufNI1gGH",
+          "name": "Billbee"
         }
       }
     }
   ],
   "pinData": {},
-  "settings": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2023-04-25T14:31:50.000Z",
-  "versionId": "c8a71b36-3923-4453-b04b-507a10faafcb"
+  "updatedAt": "2023-12-04T10:46:50.000Z",
+  "versionId": "44977b72-02d7-4b5f-b629-2123ce53cc13"
 }

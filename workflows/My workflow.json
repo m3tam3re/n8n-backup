@@ -32,7 +32,51 @@
             "index": 0
           },
           {
-            "node": "Edit Fields3",
+            "node": "Item Lists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking \"Execute Workflow\"": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Item Lists": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Spreadsheet File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Spreadsheet File": {
+      "main": [
+        [
+          {
+            "node": "Write Binary File",
             "type": "main",
             "index": 0
           }
@@ -47,15 +91,38 @@
   "nodes": [
     {
       "parameters": {
-        "options": {}
+        "fields": {
+          "values": [
+            {
+              "name": "Id",
+              "stringValue": "={{ $json.Id || \"none\" }}"
+            },
+            {
+              "name": "OrderRef",
+              "stringValue": "={{ $json.OrderNumber || \"none\" }}"
+            },
+            {
+              "name": "CustomerId",
+              "stringValue": "={{ $json.Customer.Id }}"
+            },
+            {
+              "name": "date",
+              "stringValue": "={{ $json.CreatedAt }}"
+            }
+          ]
+        },
+        "include": "none",
+        "options": {
+          "includeBinary": false
+        }
       },
       "id": "5cd78676-a0bd-4536-8759-f996d97b4254",
       "name": "Edit Fields2",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.1,
       "position": [
-        860,
-        660
+        480,
+        -1780
       ]
     },
     {
@@ -75,7 +142,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        0,
+        80,
         -1340
       ]
     },
@@ -88,23 +155,10 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1,
       "position": [
-        220,
+        680,
         -1360
       ],
       "webhookId": "de46ac63-1976-47ce-a91c-2d96bbd61bad"
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "id": "8f2309ea-1d47-4542-8202-36d23cbdefa7",
-      "name": "Edit Fields3",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.1,
-      "position": [
-        0,
-        -1580
-      ]
     },
     {
       "parameters": {
@@ -120,7 +174,11 @@
             },
             {
               "name": "page",
-              "value": "={{$runIndex + 1}}"
+              "value": "={{ $runIndex + 1 }}"
+            },
+            {
+              "name": "minOrderDate",
+              "value": "2023-01-01"
             }
           ]
         },
@@ -133,7 +191,13 @@
             }
           ]
         },
-        "options": {}
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
       },
       "id": "25d5e4e0-a202-46c7-9df8-b72721fe0861",
       "name": "HTTP Request1",
@@ -149,6 +213,64 @@
           "name": "Billbee"
         }
       }
+    },
+    {
+      "parameters": {},
+      "id": "6ba1ecc5-aec7-4a22-a00b-b3e434f54926",
+      "name": "When clicking \"Execute Workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        -1620
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "body.Data",
+        "options": {}
+      },
+      "id": "47eb34b6-dabd-4ef9-bba6-b31225a7535a",
+      "name": "Item Lists",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 3,
+      "position": [
+        300,
+        -1780
+      ]
+    },
+    {
+      "parameters": {
+        "fileName": "/var/lib/n8n/foo.csv",
+        "options": {
+          "append": true
+        }
+      },
+      "id": "fbe45256-ff55-45c8-a61c-fab25ae795c4",
+      "name": "Write Binary File",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        960,
+        -1780
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "toFile",
+        "fileFormat": "csv",
+        "options": {
+          "headerRow": false
+        }
+      },
+      "id": "abe8462e-d3d0-4d19-a178-ba3b79e8df11",
+      "name": "Spreadsheet File",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 2,
+      "position": [
+        720,
+        -1780
+      ]
     }
   ],
   "pinData": {},
@@ -158,6 +280,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2023-12-04T10:46:50.000Z",
-  "versionId": "44977b72-02d7-4b5f-b629-2123ce53cc13"
+  "updatedAt": "2023-12-04T13:38:48.000Z",
+  "versionId": "2208cba9-543e-4754-9811-91a54f368abd"
 }

@@ -119,6 +119,10 @@
             {
               "name": "date",
               "stringValue": "={{ $json.CreatedAt }}"
+            },
+            {
+              "name": "Shop",
+              "stringValue": "={{ $json.Seller.BillbeeShopName || \"none\" }}"
             }
           ]
         },
@@ -303,6 +307,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2023-12-05T10:58:38.000Z",
-  "versionId": "56662505-625b-41d9-a100-c49d6ff143dc"
+  "updatedAt": "2023-12-05T11:11:26.000Z",
+  "versionId": "914b4525-a04e-4c7a-945a-960186635017"
 }

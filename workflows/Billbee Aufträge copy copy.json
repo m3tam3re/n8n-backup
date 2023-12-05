@@ -1,0 +1,308 @@
+{
+  "active": false,
+  "connections": {
+    "Success?": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Item Lists",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking \"Execute Workflow\"": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Item Lists": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Spreadsheet File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Spreadsheet File": {
+      "main": [
+        [
+          {
+            "node": "Write Binary File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Success?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-12-05T10:51:33.911Z",
+  "id": "yG43J6U4blfnjO6G",
+  "meta": null,
+  "name": "Billbee Aufträge copy copy",
+  "nodes": [
+    {
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "Id",
+              "stringValue": "={{ $json.Id || \"none\" }}"
+            },
+            {
+              "name": "OrderRef",
+              "stringValue": "={{ $json.OrderNumber || \"none\" }}"
+            },
+            {
+              "name": "CustomerId",
+              "stringValue": "={{ $json.Customer.Id }}"
+            },
+            {
+              "name": "date",
+              "stringValue": "={{ $json.CreatedAt }}"
+            }
+          ]
+        },
+        "include": "none",
+        "options": {
+          "includeBinary": false
+        }
+      },
+      "id": "a5d58d04-3ac0-4d53-91ee-1be31595b2f6",
+      "name": "Edit Fields2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.1,
+      "position": [
+        480,
+        -1780
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.body.Data }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "15306e4d-7b13-4e3e-86c0-30355d5a00d9",
+      "name": "Success?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        300,
+        -1340
+      ]
+    },
+    {
+      "parameters": {
+        "unit": "seconds"
+      },
+      "id": "b7d4d5b8-4bcb-4935-95d4-f3c73d80bd0e",
+      "name": "Wait",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        680,
+        -1360
+      ],
+      "webhookId": "94f5ed58-4a29-477f-b1fd-ec17df73da7a"
+    },
+    {
+      "parameters": {
+        "url": "https://app.billbee.io/api/v1/orders",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "pageSize",
+              "value": "2"
+            },
+            {
+              "name": "page",
+              "value": "=1"
+            },
+            {
+              "name": "minOrderDate",
+              "value": "2024-01-01"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Billbee-Api-Key",
+              "value": "2855BE2C-1D67-4AB0-9DEB-3073E6D27B1C"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "id": "0d8848c2-a84c-44e1-86b9-271e6939732a",
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -260,
+        -1340
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "xANPcw3p1Nh0wF9J",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "dc1a9411-b8cb-4370-9866-73e5c07bf112",
+      "name": "When clicking \"Execute Workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        -1620
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "body.Data",
+        "options": {}
+      },
+      "id": "4c73e6a8-939f-4cd1-b0f2-0b1c1f51c6b7",
+      "name": "Item Lists",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 3,
+      "position": [
+        300,
+        -1780
+      ]
+    },
+    {
+      "parameters": {
+        "fileName": "/var/lib/n8n/foo.csv",
+        "options": {
+          "append": true
+        }
+      },
+      "id": "ffe1c7a4-51f6-4d04-966e-3bcef5285442",
+      "name": "Write Binary File",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        960,
+        -1780
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "toFile",
+        "fileFormat": "csv",
+        "options": {
+          "headerRow": false
+        }
+      },
+      "id": "65b3f3d8-20c0-4964-a458-b05d2a0fd32a",
+      "name": "Spreadsheet File",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 2,
+      "position": [
+        720,
+        -1780
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nif (item.body.Data.length === 0) {\n    item.headers.statusCode = 400;\n\nreturn $input.all();"
+      },
+      "id": "5a905a78-7bd0-466b-99e2-53dbc4ac0510",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -40,
+        -1340
+      ]
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2023-12-05T10:51:33.911Z",
+  "versionId": "c6baf85f-17ac-4b92-bb5e-95a52b978e3f"
+}

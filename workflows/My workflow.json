@@ -130,9 +130,8 @@
         "conditions": {
           "number": [
             {
-              "value1": "={{ $json.statusCode }}",
-              "operation": "equal",
-              "value2": 200
+              "value1": "={{ $json.body.Data }}",
+              "operation": "isNotEmpty"
             }
           ]
         }
@@ -170,11 +169,11 @@
           "parameters": [
             {
               "name": "pageSize",
-              "value": "250"
+              "value": "2"
             },
             {
               "name": "page",
-              "value": "={{ $runIndex + 1 }}"
+              "value": "=1"
             },
             {
               "name": "minOrderDate",
@@ -209,8 +208,8 @@
       ],
       "credentials": {
         "httpBasicAuth": {
-          "id": "MM5S4dq8ufNI1gGH",
-          "name": "Billbee"
+          "id": "xANPcw3p1Nh0wF9J",
+          "name": "Unnamed credential"
         }
       }
     },
@@ -280,6 +279,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2023-12-04T13:38:48.000Z",
-  "versionId": "2208cba9-543e-4754-9811-91a54f368abd"
+  "updatedAt": "2023-12-05T10:36:16.000Z",
+  "versionId": "0126ae60-1dbe-45ce-8edc-7ca2df444b30"
 }

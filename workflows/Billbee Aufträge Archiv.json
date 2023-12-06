@@ -114,7 +114,7 @@
             },
             {
               "name": "CustomerId",
-              "stringValue": "={{ $json.Customer.Id }}"
+              "stringValue": "={{ $json.Customer.Number }}"
             },
             {
               "name": "date",
@@ -307,6 +307,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2023-12-05T11:11:26.000Z",
-  "versionId": "914b4525-a04e-4c7a-945a-960186635017"
+  "updatedAt": "2023-12-06T09:46:13.000Z",
+  "versionId": "f0fbaf37-d81e-41f5-82bb-a134b27be406"
 }

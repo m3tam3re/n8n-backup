@@ -1,0 +1,502 @@
+{
+  "active": false,
+  "connections": {
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Split Response Into Orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Postgres1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Item Lists1": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Response Into Orders": {
+      "main": [
+        [
+          {
+            "node": "Upsert Customer",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "Item Lists1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Crypto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crypto": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-12-11T17:25:14.909Z",
+  "id": "55eZFqIMkqfMEtaC",
+  "meta": null,
+  "name": "Billbee Aufträge -> Data Warehouse",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "https://app.billbee.io/api/v1/orders",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "minOrderDate",
+              "value": "={{ $today.minus(1 $day) }}"
+            },
+            {
+              "name": "pageSize",
+              "value": "250"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Billbee-Api-Key",
+              "value": "2855BE2C-1D67-4AB0-9DEB-3073E6D27B1C"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "34781fe0-a66e-43a6-a616-45a1ad27f2e8",
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -260,
+        -1340
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "xANPcw3p1Nh0wF9J",
+          "name": "Billbee Basic"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtMinute": 5
+            }
+          ]
+        }
+      },
+      "id": "28e8e58e-aea3-4c88-b174-7f4a51c425bd",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -520,
+        -1340
+      ]
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "fact_order_details",
+          "mode": "list",
+          "cachedResultName": "fact_order_details"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "product_id": "={{ $json.Product.EAN }}",
+            "quantity": "={{ $json.Quantity }}",
+            "price_each": "={{ $json.TotalPrice / $json.Quantity}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "order_detail_id",
+              "displayName": "order_detail_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "order_id",
+              "displayName": "order_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "product_id",
+              "displayName": "product_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "quantity",
+              "displayName": "quantity",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "price_each",
+              "displayName": "price_each",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "dab64316-4942-4207-b75a-dcd78704ab05",
+      "name": "Postgres1",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.3,
+      "position": [
+        1580,
+        -1320
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "JW5wwsSY4obQbCBb",
+          "name": "Postgres - warehouse"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "dim_customers",
+          "mode": "list",
+          "cachedResultName": "dim_customers"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "customer_id": "={{ $json.Customer.Number }}",
+            "customer_country": "={{ $json.ShippingAddress.CountryISO2 }}"
+          },
+          "matchingColumns": [
+            "customer_id"
+          ],
+          "schema": [
+            {
+              "id": "customer_id",
+              "displayName": "customer_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "customer_country",
+              "displayName": "customer_country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6bd22bb9-e978-436e-bfa0-5f7579dec8d0",
+      "name": "Upsert Customer",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.3,
+      "position": [
+        1300,
+        -1740
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "JW5wwsSY4obQbCBb",
+          "name": "Postgres - warehouse"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.Product.EAN }}",
+              "operation": "notEqual",
+              "value2": "={{ null }}"
+            }
+          ]
+        }
+      },
+      "id": "7991fd99-8f2d-4911-bc42-98b1c78269b3",
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        -1300
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "OrderItems",
+        "options": {}
+      },
+      "id": "48b91734-2dec-494e-8a8b-d260e5a5ff40",
+      "name": "Item Lists1",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 3,
+      "position": [
+        1100,
+        -1300
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "Data",
+        "options": {}
+      },
+      "id": "f951938c-ca90-4f33-9dce-099084407196",
+      "name": "Split Response Into Orders",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 3,
+      "position": [
+        40,
+        -1480
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "dim_orders",
+          "mode": "list",
+          "cachedResultName": "dim_orders"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "order_id": 0,
+            "order_date": 0,
+            "customer_id": 0,
+            "platform_id": 0
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "order_id",
+              "displayName": "order_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "order_ref",
+              "displayName": "order_ref",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "order_date",
+              "displayName": "order_date",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "customer_id",
+              "displayName": "customer_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "platform_id",
+              "displayName": "platform_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "716963ce-227c-470b-83d5-85c4af9442f3",
+      "name": "Postgres",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.3,
+      "position": [
+        840,
+        -1300
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "JW5wwsSY4obQbCBb",
+          "name": "Postgres - warehouse"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n  \n}\n\nreturn $input.all();"
+      },
+      "id": "ab86ad1c-fa6f-4683-9b51-70dbfdcc1540",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        260,
+        -1480
+      ]
+    },
+    {
+      "parameters": {
+        "value": "={{ $json.OrderNumber.concat($json.CreatedAt.toDate().format(\"yyyy-MM-d\")) }}",
+        "dataPropertyName": "=order_hash",
+        "encoding": "base64"
+      },
+      "id": "67fd82c6-055a-41d7-bc5e-ca727b0f9777",
+      "name": "Crypto",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        480,
+        -1480
+      ]
+    },
+    {
+      "parameters": {
+        "value": "406-8723903-474272720220101"
+      },
+      "id": "ded21e90-3c0a-4122-87f7-a21a1ed4d998",
+      "name": "Crypto1",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        580,
+        -1220
+      ]
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2023-12-11T19:07:26.000Z",
+  "versionId": "617ecfde-b568-4cbc-8c1c-a8ee328a2882"
+}

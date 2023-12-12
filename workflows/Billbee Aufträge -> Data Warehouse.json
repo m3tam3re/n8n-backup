@@ -34,17 +34,6 @@
         ]
       ]
     },
-    "Item Lists1": {
-      "main": [
-        [
-          {
-            "node": "IF",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Split Response Into Orders": {
       "main": [
         [
@@ -54,9 +43,9 @@
             "index": 0
           },
           {
-            "node": "Code",
+            "node": "Merge",
             "type": "main",
-            "index": 0
+            "index": 1
           }
         ]
       ]
@@ -65,18 +54,7 @@
       "main": [
         [
           {
-            "node": "Item Lists1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Code": {
-      "main": [
-        [
-          {
-            "node": "Crypto",
+            "node": "Set Platform Ids",
             "type": "main",
             "index": 0
           }
@@ -87,7 +65,51 @@
       "main": [
         [
           {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upsert Customer": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Crypto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
             "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Platform Ids": {
+      "main": [
+        [
+          {
+            "node": "IF",
             "type": "main",
             "index": 0
           }
@@ -239,7 +261,7 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.3,
       "position": [
-        1580,
+        2020,
         -1320
       ],
       "credentials": {
@@ -301,8 +323,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.3,
       "position": [
-        1300,
-        -1740
+        300,
+        -1480
       ],
       "credentials": {
         "postgres": {
@@ -328,21 +350,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1320,
-        -1300
-      ]
-    },
-    {
-      "parameters": {
-        "fieldToSplitOut": "OrderItems",
-        "options": {}
-      },
-      "id": "48b91734-2dec-494e-8a8b-d260e5a5ff40",
-      "name": "Item Lists1",
-      "type": "n8n-nodes-base.itemLists",
-      "typeVersion": 3,
-      "position": [
-        1100,
+        1760,
         -1300
       ]
     },
@@ -377,10 +385,11 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "order_id": 0,
-            "order_date": 0,
-            "customer_id": 0,
-            "platform_id": 0
+            "order_id": "={{ $json.order_hash }}",
+            "order_ref": "={{ $json.OrderNumber }}",
+            "order_date": "={{ $json.CreatedAt.toDate().format(\"yyyyMMdd\") }}",
+            "customer_id": "={{ $json.Customer.Number }}",
+            "platform_id": "={{ \nswitch ($json[\"ApiAccountName\"]) {\n   case 'Otto':\n      $json.platform = 6;\n   default:\n      $json.platform = 1;\n}\n}}"
           },
           "matchingColumns": [],
           "schema": [
@@ -428,6 +437,15 @@
               "display": true,
               "type": "number",
               "canBeUsedToMatch": false
+            },
+            {
+              "id": "md5_hash",
+              "displayName": "md5_hash",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
             }
           ]
         },
@@ -438,8 +456,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.3,
       "position": [
-        840,
-        -1300
+        1120,
+        -1320
       ],
       "credentials": {
         "postgres": {
@@ -447,19 +465,6 @@
           "name": "Postgres - warehouse"
         }
       }
-    },
-    {
-      "parameters": {
-        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n  \n}\n\nreturn $input.all();"
-      },
-      "id": "ab86ad1c-fa6f-4683-9b51-70dbfdcc1540",
-      "name": "Code",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        260,
-        -1480
-      ]
     },
     {
       "parameters": {
@@ -472,21 +477,50 @@
       "type": "n8n-nodes-base.crypto",
       "typeVersion": 1,
       "position": [
-        480,
-        -1480
+        700,
+        -1320
       ]
     },
     {
       "parameters": {
-        "value": "406-8723903-474272720220101"
+        "mode": "chooseBranch",
+        "output": "input2"
       },
-      "id": "ded21e90-3c0a-4122-87f7-a21a1ed4d998",
-      "name": "Crypto1",
-      "type": "n8n-nodes-base.crypto",
-      "typeVersion": 1,
+      "id": "8490a7f7-6f11-487b-8f81-4c97f56c638b",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
       "position": [
-        580,
-        -1220
+        500,
+        -1320
+      ]
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "# Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor item in _input.all():\n\tmatch item.json.Seller.BillbeeShopName:\n\t\tcase 'eBay':\n                        item.json.platform = 12\n\t\tcase 'lana-kk':\n                        item.json.platform = 1\n\t\tcase 'Amazon':\n                        item.json.platform = 2\n\t\tcase 'Weltkarten24':\n                        item.json.platform = 3\n\t\tcase 'KAUFLAND':\n                        item.json.platform = 5\n\t\tcase 'Wayfair':\n                        item.json.platform = 4\n\t\tcase 'Böttcher AG':\n                        item.json.platform = 7\n\t\tcase 'Juramondo':\n                        item.json.platform = 9\n\t\tcase 'wild.lanakk.com':\n                        item.json.platform = 8\n\t\tcase 'Etsy':\n                        item.json.platform = 10\n\t\tcase 'Otto':\n                        item.json.platform = 6\n\t\tcase 'weltkarte-kinder':\n                        item.json.platform = 11\n\t\tcase _:\n                        item.json.platform = 1\nreturn _input.all()\n"
+      },
+      "id": "2006b054-3147-4f8a-b8d1-6ce19554dfde",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        920,
+        -1320
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "OrderItems",
+        "options": {}
+      },
+      "id": "48b91734-2dec-494e-8a8b-d260e5a5ff40",
+      "name": "Set Platform Ids",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 3,
+      "position": [
+        1320,
+        -1320
       ]
     }
   ],
@@ -497,6 +531,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2023-12-11T19:07:26.000Z",
-  "versionId": "617ecfde-b568-4cbc-8c1c-a8ee328a2882"
+  "updatedAt": "2023-12-12T09:52:19.000Z",
+  "versionId": "0e731bc6-faf1-4e5e-a83e-f8dabe7f704d"
 }

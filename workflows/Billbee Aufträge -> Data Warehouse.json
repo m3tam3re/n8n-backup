@@ -25,13 +25,7 @@
     },
     "IF": {
       "main": [
-        [
-          {
-            "node": "Postgres1",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Split Response Into Orders": {
@@ -54,7 +48,7 @@
       "main": [
         [
           {
-            "node": "Set Platform Ids",
+            "node": "Merge1",
             "type": "main",
             "index": 0
           }
@@ -101,11 +95,49 @@
             "node": "Postgres",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
           }
         ]
       ]
     },
-    "Set Platform Ids": {
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Item Lists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Item Lists": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Postgres2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres2": {
       "main": [
         [
           {
@@ -203,7 +235,9 @@
           "value": {
             "product_id": "={{ $json.Product.EAN }}",
             "quantity": "={{ $json.Quantity }}",
-            "price_each": "={{ $json.TotalPrice / $json.Quantity}}"
+            "price_each": "={{ $json.TotalPrice / $json.Quantity}}",
+            "order_detail_id": 0,
+            "order_id": 0
           },
           "matchingColumns": [],
           "schema": [
@@ -261,8 +295,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.3,
       "position": [
-        2020,
-        -1320
+        2600,
+        -1580
       ],
       "credentials": {
         "postgres": {
@@ -338,7 +372,7 @@
         "conditions": {
           "boolean": [
             {
-              "value1": "={{ $json.Product.EAN }}",
+              "value1": "={{ $json }} {{ $json.product_ean }}",
               "operation": "notEqual",
               "value2": "={{ null }}"
             }
@@ -350,8 +384,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        1760,
-        -1300
+        2320,
+        -1280
       ]
     },
     {
@@ -373,8 +407,9 @@
         "operation": "upsert",
         "schema": {
           "__rl": true,
+          "value": "public",
           "mode": "list",
-          "value": "public"
+          "cachedResultName": "public"
         },
         "table": {
           "__rl": true,
@@ -386,22 +421,15 @@
           "mappingMode": "defineBelow",
           "value": {
             "order_id": "={{ $json.order_hash }}",
-            "order_ref": "={{ $json.OrderNumber }}",
-            "order_date": "={{ $json.CreatedAt.toDate().format(\"yyyyMMdd\") }}",
+            "platform_id": "={{ $json.platform }}",
             "customer_id": "={{ $json.Customer.Number }}",
-            "platform_id": "={{ \nswitch ($json[\"ApiAccountName\"]) {\n   case 'Otto':\n      $json.platform = 6;\n   default:\n      $json.platform = 1;\n}\n}}"
+            "order_date": "={{ $json.CreatedAt.toDate().format(\"yyyyMMdd\") }}",
+            "order_ref": "={{ $json.OrderNumber }}"
           },
-          "matchingColumns": [],
+          "matchingColumns": [
+            "order_id"
+          ],
           "schema": [
-            {
-              "id": "order_id",
-              "displayName": "order_id",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "number",
-              "canBeUsedToMatch": true
-            },
             {
               "id": "order_ref",
               "displayName": "order_ref",
@@ -439,13 +467,14 @@
               "canBeUsedToMatch": false
             },
             {
-              "id": "md5_hash",
-              "displayName": "md5_hash",
-              "required": false,
+              "id": "order_id",
+              "displayName": "order_id",
+              "required": true,
               "defaultMatch": false,
               "display": true,
               "type": "string",
-              "canBeUsedToMatch": false
+              "canBeUsedToMatch": true,
+              "removed": false
             }
           ]
         },
@@ -469,8 +498,7 @@
     {
       "parameters": {
         "value": "={{ $json.OrderNumber.concat($json.CreatedAt.toDate().format(\"yyyy-MM-d\")) }}",
-        "dataPropertyName": "=order_hash",
-        "encoding": "base64"
+        "dataPropertyName": "=order_hash"
       },
       "id": "67fd82c6-055a-41d7-bc5e-ca727b0f9777",
       "name": "Crypto",
@@ -511,17 +539,88 @@
     },
     {
       "parameters": {
+        "mode": "chooseBranch",
+        "output": "input2"
+      },
+      "id": "5d30f116-d392-4a34-9977-c9cb1bcaae07",
+      "name": "Merge1",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        1300,
+        -1100
+      ]
+    },
+    {
+      "parameters": {
         "fieldToSplitOut": "OrderItems",
+        "include": "selectedOtherFields",
+        "fieldsToInclude": "order_hash",
         "options": {}
       },
-      "id": "48b91734-2dec-494e-8a8b-d260e5a5ff40",
-      "name": "Set Platform Ids",
+      "id": "dc3a5418-691f-42a9-b09f-bb4c9d0e2155",
+      "name": "Item Lists",
       "type": "n8n-nodes-base.itemLists",
       "typeVersion": 3,
       "position": [
-        1320,
-        -1320
+        1520,
+        -1100
       ]
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "# Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor item in _input.all():\n   if item.json.OrderItems.Product.EAN is None:\n      item.json.OrderItems.Product.EAN = \"1111111111111\"\n      item.json.OrderItems.Product.order_detail_sku = item.json.OrderItems.Product.SKU\nreturn _input.all()\n"
+      },
+      "id": "2b2f4265-e3af-444e-81d6-61c976ead182",
+      "name": "Code1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1740,
+        -1100
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "dim_products",
+          "mode": "list",
+          "cachedResultName": "dim_products"
+        },
+        "limit": 1,
+        "where": {
+          "values": [
+            {
+              "column": "product_ean",
+              "value": "={{ $json.OrderItems.Product.EAN }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "54832aff-c8aa-476e-89ce-762f1d037ed3",
+      "name": "Postgres2",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.3,
+      "position": [
+        1960,
+        -1100
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "JW5wwsSY4obQbCBb",
+          "name": "Postgres - warehouse"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -531,6 +630,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2023-12-12T09:52:19.000Z",
-  "versionId": "0e731bc6-faf1-4e5e-a83e-f8dabe7f704d"
+  "updatedAt": "2023-12-12T14:20:06.000Z",
+  "versionId": "bb86d85c-7be5-4ba4-aa35-59959e7386c3"
 }

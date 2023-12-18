@@ -23,11 +23,6 @@
         ]
       ]
     },
-    "IF": {
-      "main": [
-        []
-      ]
-    },
     "Split Response Into Orders": {
       "main": [
         [
@@ -119,7 +114,7 @@
       "main": [
         [
           {
-            "node": "Code1",
+            "node": "IF1",
             "type": "main",
             "index": 0
           }
@@ -142,6 +137,51 @@
         [
           {
             "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Baserow",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Baserow": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
             "type": "main",
             "index": 0
           }
@@ -384,7 +424,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        2320,
+        2540,
         -1280
       ]
     },
@@ -570,15 +610,15 @@
     {
       "parameters": {
         "language": "python",
-        "pythonCode": "# Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor item in _input.all():\n   if item.json.OrderItems.Product.EAN is None:\n      item.json.OrderItems.Product.EAN = \"1111111111111\"\n      item.json.OrderItems.Product.order_detail_sku = item.json.OrderItems.Product.SKU\nreturn _input.all()\n"
+        "pythonCode": "# Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor item in _input.all():\n   if item.json.OrderItems.Product.EAN is None:\n      print(\"hoho\")\n      item.json.OrderItems.Product.EAN = \"9999999999999\"\n      item.json.OrderItems.Product.order_detail_sku = item.json.OrderItems.Product.SKU\nreturn _input.all()\n"
       },
       "id": "2b2f4265-e3af-444e-81d6-61c976ead182",
       "name": "Code1",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1740,
-        -1100
+        2040,
+        -1120
       ]
     },
     {
@@ -611,7 +651,7 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.3,
       "position": [
-        1960,
+        2180,
         -1100
       ],
       "alwaysOutputData": true,
@@ -621,6 +661,100 @@
           "name": "Postgres - warehouse"
         }
       }
+    },
+    {
+      "parameters": {
+        "databaseId": 104,
+        "tableId": 526,
+        "limit": 1,
+        "additionalOptions": {
+          "filters": {
+            "fields": [
+              {
+                "field": 4229,
+                "value": "={{ $json.OrderItems.Product.SKU }}"
+              }
+            ]
+          }
+        }
+      },
+      "id": "6cbb5ce8-550a-4b3c-b87f-3f1d1a3a7f02",
+      "name": "Baserow",
+      "type": "n8n-nodes-base.baserow",
+      "typeVersion": 1,
+      "position": [
+        2140,
+        -1700
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "baserowApi": {
+          "id": "j10WQMd09rnsjW3T",
+          "name": "Baserow account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.OrderItems.Product.EAN }}",
+              "value2": "={{ null }}"
+            },
+            {
+              "value1": "={{ $json.OrderItems.Product.SKU }}",
+              "operation": "notEqual",
+              "value2": "={{ null }}"
+            }
+          ]
+        }
+      },
+      "id": "8f0d7af7-8f64-45c9-8bf7-9c13b7f71991",
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1720,
+        -1280
+      ]
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "# Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor item in _input.all():\n    product = item.json.OrderItems.Product\n    if product and product.get('SKU'):\n        print('hey')\n        # Correct old SKU schema\n        product.SKU = product.SKU.replace('worldmap','wm')\n        product.SKU = product.SKU.replace('weltkarte','wk')\n        # Correct very old Amazon SKUs\n        product.SKU = product.SKU.replace('kork_M1','-de-kork-l_120x80-1-S')\n        product.SKU = product.SKU.replace('kork_S','-de-kork-l_100x70-1-S')\nreturn _input.all()"
+      },
+      "id": "d49cb597-20e6-4580-8a14-6c876eefa24a",
+      "name": "Code2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1860,
+        -1520
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "['SKU (Text)']",
+              "field2": "OrderItems.Product.SKU"
+            }
+          ]
+        },
+        "joinMode": "enrichInput2",
+        "options": {}
+      },
+      "id": "bd3d3873-ac13-4d0d-97d3-97a7feb867b6",
+      "name": "Merge2",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        2180,
+        -1360
+      ]
     }
   ],
   "pinData": {},
@@ -630,6 +764,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2023-12-12T14:20:06.000Z",
-  "versionId": "bb86d85c-7be5-4ba4-aa35-59959e7386c3"
+  "updatedAt": "2023-12-18T19:09:43.000Z",
+  "versionId": "b828beea-9c8a-43fd-97b6-f3ad61c8fb22"
 }

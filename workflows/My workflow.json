@@ -1,82 +1,33 @@
 {
   "active": false,
   "connections": {
-    "Success?": {
+    "Code": {
       "main": [
         [
           {
-            "node": "Wait",
+            "node": "Filter",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Wait": {
+    "Filter": {
       "main": [
         [
           {
-            "node": "HTTP Request1",
+            "node": "Aggregate",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "HTTP Request1": {
+    "Execute Workflow Trigger": {
       "main": [
         [
           {
-            "node": "Success?",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Item Lists",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "When clicking \"Execute Workflow\"": {
-      "main": [
-        [
-          {
-            "node": "Wait",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Item Lists": {
-      "main": [
-        [
-          {
-            "node": "Edit Fields2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Edit Fields2": {
-      "main": [
-        [
-          {
-            "node": "Spreadsheet File",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Spreadsheet File": {
-      "main": [
-        [
-          {
-            "node": "Write Binary File",
+            "node": "Code",
             "type": "main",
             "index": 0
           }
@@ -84,191 +35,71 @@
       ]
     }
   },
-  "createdAt": "2023-12-04T08:45:57.778Z",
-  "id": "o9uPy8XY0bMFCS9H",
-  "meta": null,
+  "createdAt": "2024-02-06T18:20:02.968Z",
+  "id": "0k5KJioXR4gvF14N",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "name": "My workflow",
   "nodes": [
     {
       "parameters": {
-        "fields": {
-          "values": [
-            {
-              "name": "Id",
-              "stringValue": "={{ $json.Id || \"none\" }}"
-            },
-            {
-              "name": "OrderRef",
-              "stringValue": "={{ $json.OrderNumber || \"none\" }}"
-            },
-            {
-              "name": "CustomerId",
-              "stringValue": "={{ $json.Customer.Id }}"
-            },
-            {
-              "name": "date",
-              "stringValue": "={{ $json.CreatedAt }}"
-            }
-          ]
-        },
-        "include": "none",
-        "options": {
-          "includeBinary": false
-        }
+        "jsCode": "return [{\"fruit\": \"apple\", \"color\": \"green\", \"dataPrivacyLevel\": \"public\"},{\"fruit\": \"banana\", \"color\": \"yellow\", \"dataPrivacyLevel\": \"public\"},{\"fruit\": \"tomato\", \"color\": \"red\", \"dataPrivacyLevel\": \"private\"}]"
       },
-      "id": "5cd78676-a0bd-4536-8759-f996d97b4254",
-      "name": "Edit Fields2",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.1,
+      "id": "05824aeb-0063-49dc-bfa0-5fcb5f057f08",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
-        480,
-        -1780
+        640,
+        460
       ]
     },
     {
       "parameters": {
         "conditions": {
-          "number": [
+          "string": [
             {
-              "value1": "={{ $json.body.Data }}",
-              "operation": "isNotEmpty"
+              "value1": "={{ $json.dataPrivacyLevel }}",
+              "value2": "={{ $('Execute Workflow Trigger').item.json.visibility  }}"
             }
           ]
         }
       },
-      "id": "4f308b2e-f65b-4879-a566-6e6ebafbf125",
-      "name": "Success?",
-      "type": "n8n-nodes-base.if",
+      "id": "e079c6f5-ae6b-4310-ae78-e2a2d09c0ec9",
+      "name": "Filter",
+      "type": "n8n-nodes-base.filter",
       "typeVersion": 1,
       "position": [
-        80,
-        -1340
+        840,
+        460
       ]
     },
     {
       "parameters": {
-        "unit": "seconds"
+        "aggregate": "aggregateAllItemData",
+        "include": "specifiedFields",
+        "fieldsToInclude": "fruit, color",
+        "options": {}
       },
-      "id": "c06f9de4-8423-4104-bf3b-fe9eb49e447e",
-      "name": "Wait",
-      "type": "n8n-nodes-base.wait",
+      "id": "9f4a6057-2321-4b9e-8031-7a61eee484bb",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
       "position": [
-        680,
-        -1360
-      ],
-      "webhookId": "de46ac63-1976-47ce-a91c-2d96bbd61bad"
-    },
-    {
-      "parameters": {
-        "url": "https://app.billbee.io/api/v1/orders",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpBasicAuth",
-        "sendQuery": true,
-        "queryParameters": {
-          "parameters": [
-            {
-              "name": "pageSize",
-              "value": "2"
-            },
-            {
-              "name": "page",
-              "value": "=1"
-            },
-            {
-              "name": "minOrderDate",
-              "value": "2023-01-01"
-            }
-          ]
-        },
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "X-Billbee-Api-Key",
-              "value": "2855BE2C-1D67-4AB0-9DEB-3073E6D27B1C"
-            }
-          ]
-        },
-        "options": {
-          "response": {
-            "response": {
-              "fullResponse": true
-            }
-          }
-        }
-      },
-      "id": "25d5e4e0-a202-46c7-9df8-b72721fe0861",
-      "name": "HTTP Request1",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.1,
-      "position": [
-        -260,
-        -1340
-      ],
-      "credentials": {
-        "httpBasicAuth": {
-          "id": "xANPcw3p1Nh0wF9J",
-          "name": "Unnamed credential"
-        }
-      }
+        1060,
+        460
+      ]
     },
     {
       "parameters": {},
-      "id": "6ba1ecc5-aec7-4a22-a00b-b3e434f54926",
-      "name": "When clicking \"Execute Workflow\"",
-      "type": "n8n-nodes-base.manualTrigger",
+      "id": "75d7b7bb-5081-4813-bc99-998663885500",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1,
       "position": [
-        1280,
-        -1620
-      ]
-    },
-    {
-      "parameters": {
-        "fieldToSplitOut": "body.Data",
-        "options": {}
-      },
-      "id": "47eb34b6-dabd-4ef9-bba6-b31225a7535a",
-      "name": "Item Lists",
-      "type": "n8n-nodes-base.itemLists",
-      "typeVersion": 3,
-      "position": [
-        300,
-        -1780
-      ]
-    },
-    {
-      "parameters": {
-        "fileName": "/var/lib/n8n/foo.csv",
-        "options": {
-          "append": true
-        }
-      },
-      "id": "fbe45256-ff55-45c8-a61c-fab25ae795c4",
-      "name": "Write Binary File",
-      "type": "n8n-nodes-base.writeBinaryFile",
-      "typeVersion": 1,
-      "position": [
-        960,
-        -1780
-      ]
-    },
-    {
-      "parameters": {
-        "operation": "toFile",
-        "fileFormat": "csv",
-        "options": {
-          "headerRow": false
-        }
-      },
-      "id": "abe8462e-d3d0-4d19-a178-ba3b79e8df11",
-      "name": "Spreadsheet File",
-      "type": "n8n-nodes-base.spreadsheetFile",
-      "typeVersion": 2,
-      "position": [
-        720,
-        -1780
+        460,
+        460
       ]
     }
   ],
@@ -279,6 +110,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2023-12-05T10:36:16.000Z",
-  "versionId": "0126ae60-1dbe-45ce-8edc-7ca2df444b30"
+  "updatedAt": "2024-02-06T18:20:02.968Z",
+  "versionId": "81159509-0241-49db-b31c-144ae377588d"
 }

@@ -1,38 +1,274 @@
 {
-  "active": false,
-  "connections": {},
-  "createdAt": "2023-06-28T10:20:31.415Z",
-  "id": "12",
+  "active": true,
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Custom n8n Workflow Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector Store Retriever": {
+      "ai_retriever": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "ai_retriever",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Zep Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Zep Vector Store1": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Vector Store Retriever",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2024-02-06T18:22:28.892Z",
+  "id": "7NzlHuO9N42aDqtf",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "name": "My workflow 2",
   "nodes": [
     {
       "parameters": {
-        "authentication": "headerAuth",
-        "endpoint": "https://lana-kk.myshopify.com/admin/api/2022-01/graphql.json",
-        "requestFormat": "json",
-        "query": "=query {\n\torders(first: 10, query: \"date:2023-06-01\") {\n\t\tedges {\n\t\t\tnode {\n\t\t\t\tname\n\t\t\t\tcreatedAt\n\t\t\t\tcurrentTotalPriceSet {\n\t\t\t\t\tshopMoney {\n\t\t\t\t\t\tamount\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\tcustomerJourneySummary {\n\t\t\t\t\tdaysToConversion\n\t\t\t\t\tmoments(first: 5) {\n\t\t\t\t\t\tedges {\n\t\t\t\t\t\t\tnode {\n\t\t\t\t\t\t\t\t... on CustomerVisit {\n\t\t\t\t\t\t\t\t\tlandingPage\n\t\t\t\t\t\t\t\t\tutmParameters {\n\t\t\t\t\t\t\t\t\t\tsource\n\t\t\t\t\t\t\t\t\t\tcampaign\n\t\t\t\t\t\t\t\t\t\tterm\n\t\t\t\t\t\t\t\t\t\tcontent\n\t\t\t\t\t\t\t\t\t\tmedium\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}\n"
+        "options": {}
       },
-      "id": "4b1c8e68-c3e8-47f5-a7be-205b1451b7bf",
-      "name": "GraphQL1",
-      "type": "n8n-nodes-base.graphql",
+      "id": "a417c255-68aa-4b4b-8c9c-cffb083b7cb7",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1,
       "position": [
-        640,
-        620
+        660,
+        440
       ],
       "credentials": {
-        "httpHeaderAuth": {
-          "id": "14",
-          "name": "Shopify lanakk.com"
+        "openAiApi": {
+          "id": "m4d4C96RWhMU5Tt1",
+          "name": "OpenAi account"
         }
       }
+    },
+    {
+      "parameters": {
+        "name": "Schaden",
+        "description": "=Use this tool to retrieve more info on how to handle the customer request. Please combine the response from this tool to compose a helpful answer for the customer",
+        "workflowId": "GTZR2JrgNO9LO518"
+      },
+      "id": "b7e4c2aa-666e-4270-a8f6-f4407e9d4e7b",
+      "name": "Custom n8n Workflow Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "query": "={{ $json.input }}"
+      },
+      "id": "31b83959-19a5-4296-8663-b57f97f66c0b",
+      "name": "Question and Answer Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+      "typeVersion": 1.2,
+      "position": [
+        580,
+        760
+      ]
+    },
+    {
+      "parameters": {
+        "topK": 100
+      },
+      "id": "48fdfe53-99ef-43b5-8eb6-c261a9510d79",
+      "name": "Vector Store Retriever",
+      "type": "@n8n/n8n-nodes-langchain.retrieverVectorStore",
+      "typeVersion": 1,
+      "position": [
+        580,
+        980
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "4969cd73-48fc-4714-a0cd-336dadd9a86b",
+      "name": "Embeddings OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1,
+      "position": [
+        520,
+        1420
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "m4d4C96RWhMU5Tt1",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "collectionName": "gmail",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "category",
+                "value": "damage"
+              }
+            ]
+          }
+        }
+      },
+      "id": "e4436a73-0ee6-42c3-8053-4bc9a28f2ced",
+      "name": "Zep Vector Store1",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreZep",
+      "typeVersion": 1,
+      "position": [
+        520,
+        1200
+      ],
+      "credentials": {
+        "zepApi": {
+          "id": "KBCPTkEFEMdhzNym",
+          "name": "Zep Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "f00a87f7-b8b0-49c4-821c-8040b8d65592",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        300,
+        760
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4-turbo-preview",
+        "options": {}
+      },
+      "id": "7a7926aa-3d1a-449f-8922-29368dd830f8",
+      "name": "OpenAI Chat Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        380,
+        980
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "m4d4C96RWhMU5Tt1",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "995e983e-4306-4f97-8b31-cc4f450329ed",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1,
+      "position": [
+        440,
+        220
+      ],
+      "webhookId": "69e5ed75-d4b7-41f7-90eb-63693bd17f95"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "ca569f04-5fe3-468a-849e-cf43dddbdf0f",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        220
+      ]
     }
   ],
   "pinData": {},
-  "settings": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
   "staticData": null,
   "tags": [],
-  "triggerCount": 0,
-  "updatedAt": "2023-06-28T10:30:38.000Z",
-  "versionId": "5f072241-02cc-495c-9cea-b80591243e16"
+  "triggerCount": 2,
+  "updatedAt": "2024-02-06T19:12:18.000Z",
+  "versionId": "68c7d670-e657-4fa2-89b5-c7ad045b72fa"
 }

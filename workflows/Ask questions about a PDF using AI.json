@@ -1,0 +1,396 @@
+{
+  "active": false,
+  "connections": {
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Zep Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter1": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        [
+          {
+            "node": "Gmail1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI2": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Zep Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Zep Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector Store Retriever": {
+      "ai_retriever": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "ai_retriever",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Zep Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Zep Vector Store1": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Vector Store Retriever",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2024-02-06T11:22:14.839Z",
+  "id": "GTZR2JrgNO9LO518",
+  "meta": {
+    "templateId": "1960",
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Ask questions about a PDF using AI",
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "thread",
+        "limit": 100,
+        "filters": {
+          "q": "{schaden transortschaden kaputt beschädigt}",
+          "receivedAfter": "2023-10-01T00:00:00"
+        }
+      },
+      "id": "2f19ce22-5bc1-4f1b-b257-03542547cbf9",
+      "name": "Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1360,
+        -360
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "47zM2kXFFVjCUTsl",
+          "name": "Gmail  - hi@lanakk.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $('Edit Fields').item.json.text }}",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "category",
+                "value": "={{ $('Edit Fields').item.json.category }}"
+              }
+            ]
+          }
+        }
+      },
+      "id": "3637fdca-3fb6-41e8-a24c-5271e5365ee8",
+      "name": "Default Data Loader",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        -140
+      ]
+    },
+    {
+      "parameters": {
+        "chunkOverlap": 200
+      },
+      "id": "f2251b40-8e3f-401e-b029-4fcac5b1c9ec",
+      "name": "Recursive Character Text Splitter1",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "08ba0f32-ce59-41f6-8152-173f265f7579",
+      "name": "Embeddings OpenAI2",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1,
+      "position": [
+        2080,
+        -140
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "m4d4C96RWhMU5Tt1",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "category",
+              "stringValue": "damaged"
+            },
+            {
+              "name": "text",
+              "stringValue": "={{$jmespath($json.messages, \"[*].snippet\" )}}."
+            }
+          ]
+        },
+        "include": "none",
+        "options": {}
+      },
+      "id": "5dcabb58-d37a-4920-8b19-2d2bad965fd1",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [
+        1840,
+        -360
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "thread",
+        "operation": "get",
+        "threadId": "={{ $json.id }}",
+        "options": {}
+      },
+      "id": "77947787-4419-4c88-97ca-95238dd5bde7",
+      "name": "Gmail1",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1580,
+        -360
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "47zM2kXFFVjCUTsl",
+          "name": "Gmail  - hi@lanakk.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "collectionName": "gmail",
+        "options": {}
+      },
+      "id": "f8f8ac2e-4b4f-4daf-a9cc-1be6d74c0f08",
+      "name": "Zep Vector Store",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreZep",
+      "typeVersion": 1,
+      "position": [
+        2080,
+        -360
+      ],
+      "credentials": {
+        "zepApi": {
+          "id": "KBCPTkEFEMdhzNym",
+          "name": "Zep Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "query": "={{ $json.query }}"
+      },
+      "id": "6148d07e-612d-43c5-ab0b-ef8c276f77c6",
+      "name": "Question and Answer Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+      "typeVersion": 1.2,
+      "position": [
+        2820,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4-turbo-preview",
+        "options": {}
+      },
+      "id": "fc240052-3962-4643-92b6-1644c9e4df59",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        2620,
+        300
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "m4d4C96RWhMU5Tt1",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "topK": 100
+      },
+      "id": "bad44641-1d24-4b28-b391-87557cfebae7",
+      "name": "Vector Store Retriever",
+      "type": "@n8n/n8n-nodes-langchain.retrieverVectorStore",
+      "typeVersion": 1,
+      "position": [
+        2820,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "a687073c-a218-4a6b-a02e-d5df227a5db5",
+      "name": "Embeddings OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1,
+      "position": [
+        2760,
+        740
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "m4d4C96RWhMU5Tt1",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "1f3f1ad3-e364-4f6d-b679-9b4168f6d7a0",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        2540,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "collectionName": "gmail",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "category",
+                "value": "damage"
+              }
+            ]
+          }
+        }
+      },
+      "id": "a3ccc644-8149-47d8-ac2f-dec980cb1b87",
+      "name": "Zep Vector Store1",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreZep",
+      "typeVersion": 1,
+      "position": [
+        2760,
+        520
+      ],
+      "credentials": {
+        "zepApi": {
+          "id": "KBCPTkEFEMdhzNym",
+          "name": "Zep Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2024-02-06T19:11:07.000Z",
+  "versionId": "b76ac235-146a-449b-addb-67e34544478e"
+}

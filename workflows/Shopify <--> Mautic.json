@@ -646,11 +646,11 @@
   "settings": {},
   "staticData": {
     "node:Shopify Trigger": {
-      "webhookId": 1374489280777
+      "webhookId": 1374787961097
     }
   },
   "tags": [],
   "triggerCount": 2,
-  "updatedAt": "2024-02-13T19:20:11.000Z",
-  "versionId": "7156abf0-db39-4faa-8a3b-dfe21899cd3d"
+  "updatedAt": "2024-02-14T08:13:18.000Z",
+  "versionId": "18c368e9-f44a-406e-920b-938c4f6d0cdd"
 }

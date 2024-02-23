@@ -1,33 +1,11 @@
 {
   "active": false,
   "connections": {
-    "Code": {
+    "When clicking \"Test workflow\"": {
       "main": [
         [
           {
-            "node": "Filter",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Filter": {
-      "main": [
-        [
-          {
-            "node": "Aggregate",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Execute Workflow Trigger": {
-      "main": [
-        [
-          {
-            "node": "Code",
+            "node": "Shopify",
             "type": "main",
             "index": 0
           }
@@ -35,72 +13,44 @@
       ]
     }
   },
-  "createdAt": "2024-02-06T18:20:02.968Z",
-  "id": "0k5KJioXR4gvF14N",
+  "createdAt": "2024-02-23T11:25:15.328Z",
+  "id": "QHIMkzoAU9taf6mR",
   "meta": {
     "templateCredsSetupCompleted": true
   },
   "name": "My workflow",
   "nodes": [
     {
-      "parameters": {
-        "jsCode": "return [{\"fruit\": \"apple\", \"color\": \"green\", \"dataPrivacyLevel\": \"public\"},{\"fruit\": \"banana\", \"color\": \"yellow\", \"dataPrivacyLevel\": \"public\"},{\"fruit\": \"tomato\", \"color\": \"red\", \"dataPrivacyLevel\": \"private\"}]"
-      },
-      "id": "05824aeb-0063-49dc-bfa0-5fcb5f057f08",
-      "name": "Code",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        640,
-        460
-      ]
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "string": [
-            {
-              "value1": "={{ $json.dataPrivacyLevel }}",
-              "value2": "={{ $('Execute Workflow Trigger').item.json.visibility  }}"
-            }
-          ]
-        }
-      },
-      "id": "e079c6f5-ae6b-4310-ae78-e2a2d09c0ec9",
-      "name": "Filter",
-      "type": "n8n-nodes-base.filter",
+      "parameters": {},
+      "id": "14806ae4-561c-4b00-81b4-83de67abee76",
+      "name": "When clicking \"Test workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        840,
-        460
+        1140,
+        540
       ]
     },
     {
       "parameters": {
-        "aggregate": "aggregateAllItemData",
-        "include": "specifiedFields",
-        "fieldsToInclude": "fruit, color",
+        "authentication": "accessToken",
+        "operation": "getAll",
         "options": {}
       },
-      "id": "9f4a6057-2321-4b9e-8031-7a61eee484bb",
-      "name": "Aggregate",
-      "type": "n8n-nodes-base.aggregate",
+      "id": "a1829c92-4643-4fbe-9b36-054614889c3d",
+      "name": "Shopify",
+      "type": "n8n-nodes-base.shopify",
       "typeVersion": 1,
       "position": [
-        1060,
-        460
-      ]
-    },
-    {
-      "parameters": {},
-      "id": "75d7b7bb-5081-4813-bc99-998663885500",
-      "name": "Execute Workflow Trigger",
-      "type": "n8n-nodes-base.executeWorkflowTrigger",
-      "typeVersion": 1,
-      "position": [
-        460,
-        460
-      ]
+        1360,
+        540
+      ],
+      "credentials": {
+        "shopifyAccessTokenApi": {
+          "id": "11",
+          "name": "Shopify Access Token account"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -110,6 +60,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2024-02-06T18:20:02.968Z",
-  "versionId": "81159509-0241-49db-b31c-144ae377588d"
+  "updatedAt": "2024-02-23T11:25:15.328Z",
+  "versionId": "206f4c74-a139-4964-9348-785c9e2b53b0"
 }

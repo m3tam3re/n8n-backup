@@ -1,18 +1,6 @@
 {
   "active": false,
-  "connections": {
-    "When clicking \"Test workflow\"": {
-      "main": [
-        [
-          {
-            "node": "Shopify",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    }
-  },
+  "connections": {},
   "createdAt": "2024-02-23T11:25:15.328Z",
   "id": "QHIMkzoAU9taf6mR",
   "meta": {
@@ -33,17 +21,18 @@
     },
     {
       "parameters": {
-        "authentication": "accessToken",
-        "operation": "getAll",
+        "url": "https://lana-kk.myshopify.com/admin/api/2024-01/themes/143692988681/assets.json?asset[key]=sections/header-group.json",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "shopifyAccessTokenApi",
         "options": {}
       },
-      "id": "a1829c92-4643-4fbe-9b36-054614889c3d",
-      "name": "Shopify",
-      "type": "n8n-nodes-base.shopify",
-      "typeVersion": 1,
+      "id": "3426b9f2-0dc8-4d63-b95e-8ceec2e851e1",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
       "position": [
-        1360,
-        540
+        1120,
+        340
       ],
       "credentials": {
         "shopifyAccessTokenApi": {
@@ -60,6 +49,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2024-02-23T11:25:15.328Z",
-  "versionId": "206f4c74-a139-4964-9348-785c9e2b53b0"
+  "updatedAt": "2024-02-27T10:51:47.000Z",
+  "versionId": "c046c4ec-3114-4ee3-881a-8f192d91de8d"
 }

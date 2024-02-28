@@ -1,6 +1,40 @@
 {
   "active": false,
-  "connections": {},
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "createdAt": "2024-02-23T11:25:15.328Z",
   "id": "QHIMkzoAU9taf6mR",
   "meta": {
@@ -31,8 +65,68 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        1120,
-        340
+        520,
+        260
+      ],
+      "credentials": {
+        "shopifyAccessTokenApi": {
+          "id": "11",
+          "name": "Shopify Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json = JSON.parse(item.json.asset.value);\n}\n\nreturn $input.all();"
+      },
+      "id": "ab1b04e6-141d-4057-82d6-a32426d44f3a",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        740,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "sections['announcement-bar'].blocks['f7126305-b86b-4196-a5c9-d3e001ee565f'].settings.top_message_text",
+              "stringValue": "<a href=\"https://www.lanakk.com/collections/sale\"> 20 Jahre Lana KK®  Entdecke unsere Angebote</a>"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2c3296ab-479e-4822-af56-97ce7f4244b0",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [
+        960,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "https://lana-kk.myshopify.com/admin/api/2024-01/themes/143692988681/assets.json",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "shopifyAccessTokenApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\"asset\":{\"key\":\"sections/header-group2.json\",\"value\":\"{{ JSON.stringify($json).replace(/\\\\/g, \"\\\\\\\\\").replace(/\"/g, '\\\\\"').replace(/\\n/g, \"\\\\n\") }}\"}}",
+        "options": {}
+      },
+      "id": "79939191-afb8-4120-a6fa-c308e0733327",
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1260,
+        260
       ],
       "credentials": {
         "shopifyAccessTokenApi": {
@@ -49,6 +143,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2024-02-27T10:51:47.000Z",
-  "versionId": "c046c4ec-3114-4ee3-881a-8f192d91de8d"
+  "updatedAt": "2024-02-28T10:41:29.000Z",
+  "versionId": "f3cf390d-1179-45c5-ad4d-86b204e96b63"
 }

@@ -474,13 +474,13 @@
   "staticData": {
     "node:Gmail Trigger": {
       "possibleDuplicates": [
-        "190023690559d2c0"
+        "190065921c82766f"
       ],
-      "lastTimeChecked": 1718024011
+      "lastTimeChecked": 1718093411
     }
   },
   "tags": [],
   "triggerCount": 1,
-  "updatedAt": "2024-06-10T13:42:40.000Z",
+  "updatedAt": "2024-06-11T08:10:40.000Z",
   "versionId": "d5336b9a-260a-4f88-862e-edbbb760acb2"
 }

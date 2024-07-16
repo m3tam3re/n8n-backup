@@ -1,0 +1,206 @@
+{
+  "active": false,
+  "connections": {
+    "When clicking \"Test workflow\"": {
+      "main": [
+        [
+          {
+            "node": "Baserow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Contact by EMail": {
+      "main": [
+        [
+          {
+            "node": "Mautic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Baserow": {
+      "main": [
+        [
+          {
+            "node": "Search Contact by EMail",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Baserow1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2024-02-23T11:25:15.328Z",
+  "id": "QHIMkzoAU9taf6mR",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Mautic opt out",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "4ba1a23f-8cec-4e4a-87ce-c72b0f6fe8a3",
+      "name": "When clicking \"Test workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        900,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "getAll",
+        "limit": 1,
+        "options": {
+          "search": "={{ $json.Email }}"
+        }
+      },
+      "id": "bf56012b-7615-460b-8664-cacf607c7183",
+      "name": "Search Contact by EMail",
+      "type": "n8n-nodes-base.mautic",
+      "typeVersion": 1,
+      "position": [
+        1580,
+        460
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "mauticOAuth2Api": {
+          "id": "6",
+          "name": "Mautic account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "4e09a7a3-f972-4d0e-936d-9601b8460bcc",
+      "name": "No Operation, do nothing",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1580,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "delete",
+        "contactId": "={{ $json.id }}",
+        "options": {}
+      },
+      "id": "99c2c1f5-7da0-48f8-a321-16c33ea0fce0",
+      "name": "Mautic",
+      "type": "n8n-nodes-base.mautic",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        460
+      ],
+      "credentials": {
+        "mauticOAuth2Api": {
+          "id": "6",
+          "name": "Mautic account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "28e9ea44-a759-4227-8134-5a6780c03acb",
+      "name": "Loop Over Items",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1320,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "databaseId": 73,
+        "tableId": 1063,
+        "rowId": "={{ $json.id }}",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": 9958,
+              "fieldValue": "true"
+            }
+          ]
+        }
+      },
+      "id": "256a7d40-5fd1-46b6-bc24-97c7447337c2",
+      "name": "Baserow1",
+      "type": "n8n-nodes-base.baserow",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        760
+      ],
+      "credentials": {
+        "baserowApi": {
+          "id": "j10WQMd09rnsjW3T",
+          "name": "Baserow account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "databaseId": 73,
+        "tableId": 1063,
+        "returnAll": true,
+        "additionalOptions": {}
+      },
+      "id": "a629a94d-3580-43c3-a887-ee9767c2339d",
+      "name": "Baserow",
+      "type": "n8n-nodes-base.baserow",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        460
+      ],
+      "credentials": {
+        "baserowApi": {
+          "id": "j10WQMd09rnsjW3T",
+          "name": "Baserow account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2024-07-16T17:36:30.000Z",
+  "versionId": "579065d6-559c-491c-9cdd-a36d39cfd17e"
+}

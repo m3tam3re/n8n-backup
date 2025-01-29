@@ -467,7 +467,7 @@
       "parameters": {
         "authentication": "headerAuth",
         "endpoint": "https://lana-kk.myshopify.com/admin/api/2023-04/graphql.json",
-        "query": "={\n  customers(first: 1, query: \"email:'{{ $json[\"body\"][\"mautic.lead_channel_subscription_changed\"][0][\"contact\"][\"fields\"][\"core\"][\"email\"][\"value\"] }}'\" ) {\n    edges {\n      node {\n        id\n        email\n        marketingOptInLevel\n      }\n    }\n  }\n}"
+        "query": "={\n  customers(first: 1, query: \"email:'{{ $json[\"body\"][\"mautic.lead_channel_subscription_changed\"][0][\"contact\"][\"fields\"][\"core\"][\"email\"][\"value\"] }}'\" ) {\n    edges {\n      node {\n        id\n        mail\n        emailMarketingConsent {\n        marketingOptInLevel\n      }\n    }\n  }\n}"
       },
       "id": "08ea065c-cc8d-4020-89c0-0aa35d99a373",
       "name": "Get customer from Shopify",
@@ -646,11 +646,11 @@
   "settings": {},
   "staticData": {
     "node:Shopify Trigger": {
-      "webhookId": 1374787961097
+      "webhookId": 1799753662729
     }
   },
   "tags": [],
   "triggerCount": 2,
-  "updatedAt": "2024-02-14T08:13:18.000Z",
-  "versionId": "18c368e9-f44a-406e-920b-938c4f6d0cdd"
+  "updatedAt": "2025-01-29T08:03:46.000Z",
+  "versionId": "4947016d-2004-499a-96dd-b2f8f4ab1c81"
 }

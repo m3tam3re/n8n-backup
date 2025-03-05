@@ -1,5 +1,5 @@
 {
-  "active": true,
+  "active": false,
   "connections": {
     "Gmail Trigger": {
       "main": [
@@ -474,13 +474,13 @@
   "staticData": {
     "node:Gmail Trigger": {
       "possibleDuplicates": [
-        "19564c87f54e93e8"
+        "195675ea860a4f62"
       ],
-      "lastTimeChecked": 1741152615
+      "lastTimeChecked": 1741196010
     }
   },
   "tags": [],
   "triggerCount": 1,
-  "updatedAt": "2025-03-05T05:30:44.000Z",
+  "updatedAt": "2025-03-05T19:04:08.000Z",
   "versionId": "d5336b9a-260a-4f88-862e-edbbb760acb2"
 }
